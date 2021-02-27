@@ -16,7 +16,7 @@
     "ignore": [
       "src/public"
     ],
-    "exec": "ts-node -r tsconfig-paths/register ./src"
+    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src"
   },
   "_moduleAliases": {
     "@daos": "dist/daos",
@@ -69,6 +69,7 @@
     "jet-logger": "^1.0.4",
     "jsonfile": "^6.1.0",
     "module-alias": "^2.2.2",
+    "mongoose": "^5.11.18",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
