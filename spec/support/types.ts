@@ -6,12 +6,12 @@ import { Book } from '@entities/Book/Book.interface';
 export interface IResponse extends Response {
     body: {
         users: User[];
-        books: Book[];
+        // books: Book[];
         error: string;
     };
 }
 
 export interface IReqBody {
     user?: User;
-    book?: Book;
+    // book?: Book;
 }

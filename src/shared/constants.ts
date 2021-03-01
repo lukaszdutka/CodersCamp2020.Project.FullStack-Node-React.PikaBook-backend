@@ -8,6 +8,6 @@ export const paramMissingError = 'One or more of the required parameters was mis
 export interface IRequest extends Request {
     body: {
         user: User;
-        book: Book;
+        // book: Book;
     }
 } 
