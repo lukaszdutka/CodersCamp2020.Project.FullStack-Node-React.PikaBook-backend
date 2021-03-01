@@ -28,31 +28,30 @@ router.get('/:id', async (req: Request, res: Response) => {
  *                       Add One - "POST /api/books"
  ******************************************************************************/
 
-// router.post('', async (req: Request, res: Response) => {
-//     const book = new bookModel(req.body)
-//     await book.save()
-//     return res.status(CREATED).send(book);
-// });
+router.post('', async (req: Request, res: Response) => {
+    const book = new bookModel(req.body)
+    try {
+        await book.save()
+        return res.status(CREATED).send(book);
+    } catch(error) {
+        return res.status(BAD_REQUEST).send(error._message);
+    }   
+});
 
 
 /******************************************************************************
  *                       Update - "PUT /api/books/:id"
  ******************************************************************************/
-/*
-router.put('/:id', async (req: IRequest, res: Response) => {
-    const { user } = req.body;
-    if (!user) {
-        return res.status(BAD_REQUEST).json({
-            error: paramMissingError,
-        });
-    }
-    user.id = Number(user.id);
-    await userDao.update(user);
-    return res.status(OK).end();
+
+router.put('/:id', async (req: Request, res: Response) => {
+    const book = await bookModel.findByIdAndUpdate(req.params.id, {
+        $set: {
+            req.body
+        }
+    });
 });
 
 
-*/
 /******************************************************************************
  *                    Delete - "DELETE /api/books/:id"
  ******************************************************************************/
