@@ -1,5 +1,6 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
+import userModel from '../entities/User/User.schema'
 
 import { paramMissingError, IRequest } from '@shared/constants';
 
@@ -11,13 +12,16 @@ const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 /******************************************************************************
  *                      Get All Users - "GET /api/users/all"
  ******************************************************************************/
-/*
-router.get('/all', async (req: Request, res: Response) => {
-    const users = await userDao.getAll();
+
+router.get('', async (req: Request, res: Response) => {
+    const users = await userModel.find({});
     return res.status(OK).json({users});
 });
 
-*/
+router.get('/:id', async(req:Request, res: Response)=>{
+    const user = await userModel.find({_id: req.params.id});
+    return res.status(OK).json({user});
+});
 
 /******************************************************************************
  *                       Add One - "POST /api/users/add"
