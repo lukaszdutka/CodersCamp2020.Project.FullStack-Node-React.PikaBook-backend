@@ -1,5 +1,6 @@
 import { Request } from 'express';
-import { IUser } from '@entities/User';
+import { IUser } from '@entities/User/User';
+import { IBook } from '@entities/Book/Book';
 
 
 export const paramMissingError = 'One or more of the required parameters was missing.';
@@ -7,5 +8,6 @@ export const paramMissingError = 'One or more of the required parameters was mis
 export interface IRequest extends Request {
     body: {
         user: IUser;
+        book: IBook;
     }
 } 

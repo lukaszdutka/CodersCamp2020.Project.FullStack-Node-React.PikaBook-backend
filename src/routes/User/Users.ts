@@ -3,25 +3,25 @@ import { Request, Response, Router } from 'express';
 
 import { paramMissingError, IRequest } from '@shared/constants';
 
-import userModel from '../entities/User.schema';
+import userModel from '../../entities/User/User.schema';
 
 const router = Router();
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 
-const user = userModel;
+const User = userModel;
 
 
 
 /******************************************************************************
  *                      Get All Users - "GET /api/users/all"
  ******************************************************************************/
-/*
+
 router.get('/all', async (req: Request, res: Response) => {
-    const users = await userDao.getAll();
+    const users = await User.find();
     return res.status(OK).json({users});
 });
 
-*/
+
 
 /******************************************************************************
  *                       Add One - "POST /api/users/add"
@@ -39,7 +39,7 @@ router.post('/add', async (req: IRequest, res: Response) => {
     
 
     const userData = req.body;
-    const createdUser = new user(userData);
+    const createdUser = new User(userData);
     createdUser.save()
       .then((savedUser) => {
         res.send(savedUser);
