@@ -15,18 +15,18 @@ const Book = bookModel;
 /******************************************************************************
  *                      Get All Users - "GET /api/books/all"
  *****************************************************************************/
-
+/*
 router.get('/all', async (req: Request, res: Response) => {
     const books = await Book.find();
     return res.status(OK).json({books});
 });
-
+*/
 
 
 /******************************************************************************
  *                       Add One - "POST /api/books/add"
  ******************************************************************************/
-
+/*
 router.post('/add', async (req: IRequest, res: Response) => {
     // const { user } = req.body;
     // if (!user) {
@@ -45,7 +45,7 @@ router.post('/add', async (req: IRequest, res: Response) => {
         res.send(savedBook);
       });
 });
-
+*/
 /******************************************************************************
  *                       Update - "PUT /api/books/update"
  ******************************************************************************/

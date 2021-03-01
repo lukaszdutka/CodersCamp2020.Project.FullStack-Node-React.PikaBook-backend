@@ -15,18 +15,18 @@ const User = userModel;
 /******************************************************************************
  *                      Get All Users - "GET /api/users/all"
  ******************************************************************************/
-
+/*
 router.get('/all', async (req: Request, res: Response) => {
     const users = await User.find();
     return res.status(OK).json({users});
 });
-
+*/
 
 
 /******************************************************************************
  *                       Add One - "POST /api/users/add"
  ******************************************************************************/
-
+/*
 router.post('/add', async (req: IRequest, res: Response) => {
     // const { user } = req.body;
     // if (!user) {
@@ -45,7 +45,7 @@ router.post('/add', async (req: IRequest, res: Response) => {
         res.send(savedUser);
       });
 });
-
+*/
 /******************************************************************************
  *                       Update - "PUT /api/users/update"
  ******************************************************************************/
