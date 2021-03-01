@@ -44,10 +44,15 @@ router.post('', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.put('/:id', async (req: Request, res: Response) => {
-    const book = await bookModel.findByIdAndUpdate(req.params.id, {
-        $set: req.body
-    });
-    return res.status(OK)
+    try {
+        const book = await bookModel.findByIdAndUpdate(req.params.id, {
+            $set: req.body
+        });
+        return res.status(OK).send('Book updated').end()
+    } catch(error) {
+        return res.status(BAD_REQUEST).send(error.message);
+        
+    }
 });
 
 
