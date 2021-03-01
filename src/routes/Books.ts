@@ -45,10 +45,9 @@ router.post('', async (req: Request, res: Response) => {
 
 router.put('/:id', async (req: Request, res: Response) => {
     const book = await bookModel.findByIdAndUpdate(req.params.id, {
-        $set: {
-            req.body
-        }
+        $set: req.body
     });
+    return res.status(OK)
 });
 
 
