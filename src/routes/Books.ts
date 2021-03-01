@@ -1,6 +1,6 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
-import { bookModel } frames '../entities/Book/Book.schema.ts'
+import bookModel from '../entities/Book/Book.schema'
 
 const router = Router();
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
@@ -11,19 +11,28 @@ const { BAD_REQUEST, CREATED, OK } = StatusCodes;
  ******************************************************************************/
 
 router.get('', async (req: Request, res: Response) => {
-    const books = await bookModel.find()
+    const books = await bookModel.find({})
     return res.status(OK).json({books})
+});
+
+/******************************************************************************
+ *                      Get All books - "GET /api/books"
+ ******************************************************************************/
+
+router.get('/:id', async (req: Request, res: Response) => {
+    const book = await bookModel.find({_id: req.params.id})
+    return res.status(OK).json({book})
 });
 
 /******************************************************************************
  *                       Add One - "POST /api/books"
  ******************************************************************************/
 
-router.post('', async (req: Request, res: Response) => {
-    const book = new bookModel(req.body)
-    await book.save()
-    return res.status(CREATED).end();
-});
+// router.post('', async (req: Request, res: Response) => {
+//     const book = new bookModel(req.body)
+//     await book.save()
+//     return res.status(CREATED).send(book);
+// });
 
 
 /******************************************************************************
