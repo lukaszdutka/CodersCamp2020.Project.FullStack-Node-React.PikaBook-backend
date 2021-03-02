@@ -1,6 +1,7 @@
+import { Book } from '@entities/Book/Book.interface';
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
-import bookModel from '../entities/Book/Book.schema'
+import bookModel from '../../entities/Book/Book.schema'
 
 const router = Router();
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;

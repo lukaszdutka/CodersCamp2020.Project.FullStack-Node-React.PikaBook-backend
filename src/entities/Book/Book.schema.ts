@@ -8,7 +8,7 @@ const bookSchema = new mongoose.Schema({
     trim: true
   },
   author: {
-    type: String
+    type: [String]
   },
   genres: {
     type: [String]
@@ -17,6 +17,9 @@ const bookSchema = new mongoose.Schema({
     type: Number
   },
   publisher: {
+    type: String
+  },
+  description: {
     type: String
   },
   ownerId: {

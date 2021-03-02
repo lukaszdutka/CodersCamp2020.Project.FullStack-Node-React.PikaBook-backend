@@ -1,5 +1,5 @@
-import UserRouter from './Users';
-import BookRouter from './Books';
+import UserRouter from './User/Users'
+import BookRouter from './Book/Books';
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 const {  OK } = StatusCodes;
