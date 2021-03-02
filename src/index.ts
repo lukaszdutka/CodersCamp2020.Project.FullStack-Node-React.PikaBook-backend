@@ -3,9 +3,13 @@ import app from '@server';
 import logger from '@shared/Logger';
 import mongoose from 'mongoose'
 
+if (!process.env.JWT_PRIVATE_KEY) {
+    logger.info('FATAL ERROR: jwtPrivateKedy is not defined')
+    process.exit(1);
+}
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.svu8r.mongodb.net/Pikabook?retryWrites=true&w=majority`, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
-    console.log("connected to db");
+    logger.info("connected to db");
 })
 
 const db = mongoose.connection
