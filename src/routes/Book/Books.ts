@@ -21,8 +21,13 @@ router.get('', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/:id', async (req: Request, res: Response) => {
-    const book = await bookModel.find({_id: req.params.id})
-    return res.status(OK).json({book})
+    try {
+        const book = await bookModel.find({_id: req.params.id})
+        return res.status(OK).json({book})
+    } catch(error) {
+        return res.status(BAD_REQUEST).send(error.message);
+    }
+    
 });
 
 /******************************************************************************
@@ -51,8 +56,7 @@ router.put('/:id', async (req: Request, res: Response) => {
         });
         return res.status(OK).send('Book updated').end()
     } catch(error) {
-        return res.status(BAD_REQUEST).send(error.message);
-        
+        return res.status(BAD_REQUEST).send(error.message);   
     }
 });
 
@@ -62,8 +66,12 @@ router.put('/:id', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.delete('/:id', async (req: Request, res: Response) => {
-    await bookModel.findByIdAndRemove(req.params.id)
-    return res.status(OK).end();
+    try {
+        await bookModel.findByIdAndRemove(req.params.id)
+        return res.status(OK).end();
+    } catch(error) {
+        return res.status(BAD_REQUEST).send(error.message); 
+    }
 });
 
 
