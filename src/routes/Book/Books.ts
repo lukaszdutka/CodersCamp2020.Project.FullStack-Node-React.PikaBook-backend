@@ -60,14 +60,12 @@ router.put('/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *                    Delete - "DELETE /api/books/:id"
  ******************************************************************************/
-/*
-router.delete('/:id', async (req: IRequest, res: Response) => {
-    const { id } = req.params;
-    await userDao.delete(Number(id));
+
+router.delete('/:id', async (req: Request, res: Response) => {
+    await bookModel.findByIdAndRemove(req.params.id)
     return res.status(OK).end();
 });
 
-*/
 
 /******************************************************************************
  *                                     Export
