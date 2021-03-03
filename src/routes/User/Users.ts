@@ -5,8 +5,6 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import userModel from '../../entities/User/User.schema';
 import validateUser from '../../entities/User/User.validation';
-import jwt from 'jsonwebtoken';
-import checkToken from 'express-jwt';
 
 const router = Router();
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
@@ -15,14 +13,14 @@ const User = userModel;
 // get all users
 router.get("", async (req: Request, res: Response) => {
   const users = await User.find({});
-  return res.status(OK).json({ users });
+  return res.status(OK).json(users);
 });
 
 // get a user by id
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const user = await User.find({ _id: req.params.id });
-    return res.status(OK).json({ user });
+    return res.status(OK).json(user);
   } catch (error) {
     return res.status(BAD_REQUEST).send(error.message);
   }
@@ -45,7 +43,7 @@ router.post('/', async (req: Request, res: Response) => {
         location: req.body.location
     });
     await newUser.save();
-    return res.status(CREATED).send(_.pick(newUser, ['name', 'email', 'location']));
+    return res.status(CREATED).json(_.pick(newUser, ['name', 'email', 'location']));
 });
 
 /******************************************************************************

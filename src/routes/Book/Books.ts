@@ -16,7 +16,7 @@ const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 
 router.get('', async (req: Request, res: Response) => {
     const books = await bookModel.find({})
-    return res.status(OK).json({books})
+    return res.status(OK).json(books)
 });
 
 /******************************************************************************
@@ -26,7 +26,7 @@ router.get('', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const book = await bookModel.find({_id: req.params.id})
-        return res.status(OK).json({book})
+        return res.status(OK).json(book)
     } catch(error) {
         return res.status(BAD_REQUEST).send(error.message);
     }
@@ -41,7 +41,7 @@ router.post('', async (req: Request, res: Response) => {
     const book = new bookModel(req.body)
     try {
         await book.save()
-        return res.status(CREATED).send(book);
+        return res.status(CREATED).json(book);
     } catch(error) {
         return res.status(BAD_REQUEST).send(error._message);
     }   

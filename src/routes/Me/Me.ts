@@ -14,7 +14,7 @@ router.get('',
 checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}),
  async (req: Request, res: Response) => {
     const user = await User.findById(req.user).select('-password');
-    res.status(OK).send(user);
+    res.status(OK).json(user);
 });
 
 export default router

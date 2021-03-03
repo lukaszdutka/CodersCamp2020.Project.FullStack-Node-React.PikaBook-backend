@@ -19,7 +19,7 @@ router.post('/', async (req: Request, res: Response) => {
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return res.status(BAD_REQUEST).send('Invalid email or password');
     const token = jwt.sign({_id: user._id}, `${process.env.JWT_PRIVATE_KEY}`);
-    return res.status(OK).send(token);
+    return res.status(OK).json({token});
 });
 
 export default router;
