@@ -4,7 +4,7 @@ import logger from '@shared/Logger';
 import mongoose from 'mongoose'
 
 if (!process.env.JWT_PRIVATE_KEY) {
-    logger.info('FATAL ERROR: jwtPrivateKedy is not defined')
+    logger.info('FATAL ERROR: jwtPrivateKey is not defined')
     process.exit(1);
 }
 
