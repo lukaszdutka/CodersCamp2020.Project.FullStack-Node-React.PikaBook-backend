@@ -1,6 +1,7 @@
 import UserRouter from './User/Users'
 import BookRouter from './Book/Books';
-import AuthRouter from './Auth/Auth'
+import AuthRouter from './Auth/Auth';
+import MeRouter from './Me/Me';
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 const {  OK } = StatusCodes;
@@ -11,7 +12,8 @@ const router = Router();
 // Add sub-routes
 router.use('/users', UserRouter);
 router.use('/books', BookRouter);
-router.use('/auth', AuthRouter)
+router.use('/auth', AuthRouter);
+router.use('/me', MeRouter);
 
 router.get('', (req: Request, res: Response) => {
     return res.status(OK).send('Pikachu');

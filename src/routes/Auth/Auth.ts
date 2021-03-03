@@ -11,7 +11,6 @@ const { BAD_REQUEST, OK } = StatusCodes;
 const User = userModel;
 
 // authenticate users
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/', async (req: Request, res: Response) => {
     const { error } = validateAuthReq(req.body);
     if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
