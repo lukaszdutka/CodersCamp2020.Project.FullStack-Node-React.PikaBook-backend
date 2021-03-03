@@ -17,7 +17,7 @@ router.get('', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Get All books - "GET /api/books"
+ *                      Get All books - "GET /api/books/:id"
  ******************************************************************************/
 
 router.get('/:id', async (req: Request, res: Response) => {
