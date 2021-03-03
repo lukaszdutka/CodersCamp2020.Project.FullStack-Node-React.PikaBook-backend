@@ -1,27 +1,32 @@
-import StatusCodes from 'http-status-codes';
-import { Request, Response, Router } from 'express';
+import StatusCodes from "http-status-codes";
+import { Request, Response, Router } from "express";
 
-import { paramMissingError, IRequest } from '@shared/constants';
+import { paramMissingError, IRequest } from "@shared/constants";
 
-import userModel from '../../entities/User/User.schema';
+import userModel from "../../entities/User/User.schema";
 
 const router = Router();
-const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+const { CREATED, BAD_REQUEST, OK } = StatusCodes;
 
 const User = userModel;
-
-
 
 /******************************************************************************
  *                      Get All Users - "GET /api/users/all"
  ******************************************************************************/
-/*
-router.get('/all', async (req: Request, res: Response) => {
-    const users = await User.find();
-    return res.status(OK).json({users});
-});
-*/
 
+router.get("", async (req: Request, res: Response) => {
+  const users = await User.find({});
+  return res.status(OK).json({ users });
+});
+
+router.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const user = await User.find({ _id: req.params.id });
+    return res.status(OK).json({ user });
+  } catch (error) {
+    return res.status(BAD_REQUEST).send(error.message);
+  }
+});
 
 /******************************************************************************
  *                       Add One - "POST /api/users/add"
