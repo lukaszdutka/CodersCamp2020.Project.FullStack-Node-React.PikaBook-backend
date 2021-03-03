@@ -7,7 +7,7 @@ import userModel from '../../entities/User/User.schema';
 import validateAuthReq from '../../entities/Auth/Auth.validation';
 
 const router = Router();
-const { BAD_REQUEST } = StatusCodes;
+const { BAD_REQUEST, OK } = StatusCodes;
 const User = userModel;
 
 // authenticate users
@@ -20,7 +20,7 @@ router.post('/', async (req: Request, res: Response) => {
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return res.status(BAD_REQUEST).send('Invalid email or password');
     const token = jwt.sign({_id: user._id}, `${process.env.JWT_PRIVATE_KEY}`);
-    return res.send(token);
+    return res.status(OK).send(token);
 });
 
 export default router;

@@ -6,16 +6,18 @@ import bcrypt from 'bcrypt';
 import userModel from '../../entities/User/User.schema';
 import validateUser from '../../entities/User/User.validation';
 import jwt from 'jsonwebtoken';
+import checkToken from 'express-jwt';
 
 const router = Router();
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 const User = userModel;
 
-//get all users
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/', async (req: Request, res: Response) => {
-    const users = await User.find();
-    return res.status(OK).send(users);
+//get a currently logged user
+router.get('/me',
+checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}),
+ async (req: Request, res: Response) => {
+    const user = await User.findById(req.user).select('-password');
+    res.send(user);
 });
 
 // create a new user
@@ -36,8 +38,7 @@ router.post('/', async (req: Request, res: Response) => {
         location: req.body.location
     });
     await newUser.save();
-    const token = jwt.sign({_id: newUser._id}, `${process.env.JWT_PRIVATE_KEY}`);
-    return res.status(CREATED).header('x-auth-token', token).send(_.pick(newUser, ['name', 'email', 'location']));
+    return res.status(CREATED).send(_.pick(newUser, ['name', 'email', 'location']));
 });
 
 /******************************************************************************

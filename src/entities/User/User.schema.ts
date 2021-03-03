@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 import User from './User.interface';
-import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
   name: {
