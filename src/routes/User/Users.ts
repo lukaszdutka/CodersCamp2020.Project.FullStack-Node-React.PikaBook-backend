@@ -12,16 +12,23 @@ const router = Router();
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 const User = userModel;
 
-//get a currently logged user
-router.get('/me',
-checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}),
- async (req: Request, res: Response) => {
-    const user = await User.findById(req.user).select('-password');
-    res.send(user);
+// get all users
+router.get("", async (req: Request, res: Response) => {
+  const users = await User.find({});
+  return res.status(OK).json({ users });
+});
+
+// get a user by id
+router.get("/:id", async (req: Request, res: Response) => {
+  try {
+    const user = await User.find({ _id: req.params.id });
+    return res.status(OK).json({ user });
+  } catch (error) {
+    return res.status(BAD_REQUEST).send(error.message);
+  }
 });
 
 // create a new user
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
 router.post('/', async (req: Request, res: Response) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
