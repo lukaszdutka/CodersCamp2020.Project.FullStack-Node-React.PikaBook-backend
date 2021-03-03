@@ -1,8 +1,6 @@
-import UserRouter from './User/Users'
-import BookRouter from './Book/Books';
-import StatusCodes from 'http-status-codes';
-import { Request, Response, Router } from 'express';
-const {  OK } = StatusCodes;
+import UserRouter from './user'
+import BookRouter from './book';
+import { Router } from 'express';
 
 
 // Init router and path
@@ -12,9 +10,6 @@ const router = Router();
 router.use('/users', UserRouter);
 router.use('/books', BookRouter);
 
-router.get('', (req: Request, res: Response) => {
-    return res.status(OK).send('Pikachu');
-});
 
 // Export the base-router
 export default router;
