@@ -4,6 +4,8 @@ import userModel from "./User.schema";
 import validateUser from './User.validation';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
+import { sendMail } from "@shared/email";
+import logger from "@shared/Logger";
 
 
 const { BAD_REQUEST, OK, CREATED } = StatusCodes;
@@ -45,5 +47,10 @@ export const createUser = async (req: Request, res: Response) => {
         location: req.body.location
     });
     await newUser.save();
+    
+    await sendMail(newUser.email)
+    .then((result) => console.log(`Email sent to ${newUser.email}`, result))
+    .catch((error) => console.log(error.message));
+
     return res.status(CREATED).json(_.pick(newUser, ['name', 'email', 'location']));
 } 
