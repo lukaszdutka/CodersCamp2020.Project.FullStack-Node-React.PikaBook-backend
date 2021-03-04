@@ -4,7 +4,6 @@ import validateAuthReq from './Auth.validation';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import userModel from '../User/User.schema';
-import checkToken from 'express-jwt';
 
 const User = userModel;
 const { BAD_REQUEST, OK } = StatusCodes;
@@ -30,6 +29,3 @@ export const getLoggedUser = async (req: Request, res: Response) => {
     res.status(OK).json(user);
  }
 
- export const authTokenCheck = () => { 
-    checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}) 
-    }

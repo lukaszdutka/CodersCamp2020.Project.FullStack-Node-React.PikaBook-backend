@@ -1,11 +1,6 @@
-import logger from './Logger';
+import checkToken from 'express-jwt';
 
-export const pErr = (err: Error) => {
-    if (err) {
-        logger.err(err);
-    }
-};
 
-export const getRandomInt = () => {
-    return Math.floor(Math.random() * 1_000_000_000_000);
+export const checkTokenAuth = () => { 
+    checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}) 
 };
