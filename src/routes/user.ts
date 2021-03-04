@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { getUsers, getUserById } from "../entities/User/User.controller"
+import { getUsers, getUserById, createUser } from "../entities/User/User.controller"
 
 const router = Router();
 
 router
     .get("", getUsers)
-    .get("/:id", getUserById);
+    .get("/:id", getUserById)
+    .post('/', createUser)
 
 export default router;
