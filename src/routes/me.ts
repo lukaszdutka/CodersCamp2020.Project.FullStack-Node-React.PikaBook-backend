@@ -1,7 +1,7 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response, Router } from 'express';
 //import { paramMissingError, IRequest } from '@shared/constants';
-import userModel from '../../entities/User/User.schema';
+import userModel from '../entities/User/User.schema';
 import checkToken from 'express-jwt';
 
 const router = Router();

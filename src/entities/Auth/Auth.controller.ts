@@ -1,25 +1,31 @@
 import StatusCodes from 'http-status-codes';
-import { Request, Response, Router } from 'express';
-//import { paramMissingError, IRequest } from '@shared/constants';
+import { Request, Response } from 'express';
+import validateAuthReq from './Auth.validation';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import userModel from '../../entities/User/User.schema';
-import validateAuthReq from '../../entities/Auth/Auth.validation';
+import userModel from '../User/User.schema';
 
-const router = Router();
-const { BAD_REQUEST, OK } = StatusCodes;
+
 const User = userModel;
+const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 
-// authenticate users
-router.post('/', async (req: Request, res: Response) => {
+
+export const authUser = async (req: Request, res: Response) => {
     const { error } = validateAuthReq(req.body);
     if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
+
     const user = await User.findOne({email: req.body.email});
     if (!user) return res.status(BAD_REQUEST).send("Invalid email or password");
+    
     const isPasswordValid = await bcrypt.compare(req.body.password, user.password);
     if (!isPasswordValid) return res.status(BAD_REQUEST).send('Invalid email or password');
+    
     const token = jwt.sign({_id: user._id}, `${process.env.JWT_PRIVATE_KEY}`);
     return res.status(OK).json({token});
-});
+}
 
-export default router;
+
+export const getLoggedUser = async (req: Request, res: Response) => {
+    const user = await User.findById(req.user).select('-password');
+    res.status(OK).json(user);
+ }
