@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export interface Book {
+interface Book {
   _id: mongoose.Types.ObjectId,
   name: string,
   author?: string[],
