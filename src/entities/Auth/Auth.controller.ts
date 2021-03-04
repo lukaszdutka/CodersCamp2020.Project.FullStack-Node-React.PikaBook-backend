@@ -7,10 +7,10 @@ import userModel from '../User/User.schema';
 
 
 const User = userModel;
-const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+const { BAD_REQUEST, OK } = StatusCodes;
 
 
-export const authUser = async (req: Request, res: Response) => {
+export const authenticateUser = async (req: Request, res: Response) => {
     const { error } = validateAuthReq(req.body);
     if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
 
