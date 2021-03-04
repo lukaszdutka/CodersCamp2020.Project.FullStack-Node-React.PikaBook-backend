@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import userModel from '../User/User.schema';
 
-
 const User = userModel;
 const { BAD_REQUEST, OK } = StatusCodes;
 
@@ -29,3 +28,4 @@ export const getLoggedUser = async (req: Request, res: Response) => {
     const user = await User.findById(req.user).select('-password');
     res.status(OK).json(user);
  }
+
