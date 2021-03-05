@@ -4,27 +4,35 @@ import userModel from "./User.schema";
 import validateUser from './User.validation';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
-
+import bookModel from '../../entities/Book/Book.schema';
 
 const { BAD_REQUEST, OK, CREATED } = StatusCodes;
 const User = userModel;
-
+const Book = bookModel;
 
 export const getUsers = async (req: Request, res: Response) => {
-    const users = await User.find({});
-    return res.status(OK).json({ users });
+    const users = await User.find();
+    return res.status(OK).json(users);
 }
 
 
 export const getUserById = async (req: Request, res: Response) => {
     try {
-        const user = await User.find({ _id: req.params.id });
-        return res.status(OK).json({ user });
+        const user = await User.findById(req.params.id);
+        return res.status(OK).json(user);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
     }
 }
 
+export const getUsersBooksById = async (req: Request, res: Response) => {
+    try {
+        const books = await Book.find({ownerId: req.params.id});
+        return res.status(OK).json(books);
+    } catch (error) {
+        return res.status(BAD_REQUEST).send(error.message);
+    }
+}
 
 export const createUser = async (req: Request, res: Response) => {
     const { error } = validateUser(req.body);

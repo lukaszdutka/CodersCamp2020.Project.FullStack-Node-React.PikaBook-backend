@@ -78,7 +78,8 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.2",
-    "mongoose": "^5.11.18",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.15",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

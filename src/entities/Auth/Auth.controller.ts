@@ -23,9 +23,3 @@ export const authenticateUser = async (req: Request, res: Response) => {
     return res.status(OK).json({token});
 }
 
-
-export const getLoggedUser = async (req: Request, res: Response) => {
-    const user = await User.findById(req.user).select('-password');
-    res.status(OK).json(user);
- }
-
