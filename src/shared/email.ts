@@ -1,3 +1,4 @@
+import '../pre-start';
 import nodemailer, { TransportOptions } from 'nodemailer';
 import { google } from 'googleapis';
 
@@ -23,6 +24,9 @@ export async function sendMail(userEmail: string) {
         refreshToken: process.env.REFRESH_TOKEN,
         accessToken: accessToken,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     } as TransportOptions);
 
     const mailOptions = {
