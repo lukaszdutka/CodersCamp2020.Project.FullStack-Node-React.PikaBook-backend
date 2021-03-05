@@ -1,7 +1,7 @@
 import Joi, { ValidationResult } from "joi";
-import User from "./User.interface"
+import IUser from "./User.interface"
 
-const validateUser = (user: User): ValidationResult => {
+const validateUser = (user: IUser): ValidationResult => {
     const schema = Joi.object({
         name: Joi.string().min(3).max(50).required(),
         email: Joi.string().min(5).max(255).required().email(), 

@@ -10,6 +10,7 @@ router.get('',
 checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
 getLoggedUser );
 
+//get all books of the currently logged user
 router.get('/books', 
 checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
 getLoggedUserBooks );

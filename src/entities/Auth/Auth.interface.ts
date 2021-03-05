@@ -1,6 +1,6 @@
-interface AuthReq {
+interface IAuthReq {
   email: string,
   password: string
 }
 
-export default AuthReq;
+export default IAuthReq;

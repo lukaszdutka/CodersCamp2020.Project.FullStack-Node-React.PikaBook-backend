@@ -1,12 +1,9 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
-import bookModel from '../../entities/Book/Book.schema';
 import validateBookReq from './Book.validation';
-
+import Book from '../../entities/Book/Book.schema'
 
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
-
-const Book = bookModel;
 
 
 export const getBooks = async (req: Request, res: Response) => {

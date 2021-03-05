@@ -1,7 +1,7 @@
 import Joi, { ValidationResult } from 'joi';
-import BookReq from './Book.interface';
+import IBook from './Book.interface';
 
-const validateBookReq = (bookReq: BookReq): ValidationResult => {
+const validateBookReq = (book: IBook): ValidationResult => {
     const schema = Joi.object({
       name: Joi.string().required(),
       author: Joi.array().items(Joi.string()),
@@ -10,7 +10,7 @@ const validateBookReq = (bookReq: BookReq): ValidationResult => {
       publisher: Joi.string(),
       description: Joi.string(),
     })
-    return schema.validate(bookReq);
+    return schema.validate(book);
 }
 
 export default validateBookReq;

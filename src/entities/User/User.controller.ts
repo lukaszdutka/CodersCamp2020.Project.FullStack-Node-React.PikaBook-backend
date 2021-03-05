@@ -1,14 +1,14 @@
 import StatusCodes from "http-status-codes";
 import { Request, Response } from "express";
-import userModel from "./User.schema";
+import User from "./User.schema";
 import validateUser from './User.validation';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
-import bookModel from '../../entities/Book/Book.schema';
+import Book from '../../entities/Book/Book.schema';
+import { sendMail } from "@shared/email";
 
 const { BAD_REQUEST, OK, CREATED } = StatusCodes;
-const User = userModel;
-const Book = bookModel;
+
 
 export const getUsers = async (req: Request, res: Response) => {
     const users = await User.find();
@@ -53,5 +53,10 @@ export const createUser = async (req: Request, res: Response) => {
         location: req.body.location
     });
     await newUser.save();
+    
+    await sendMail(newUser.email)
+    .then((result) => console.log(`Email sent to ${newUser.email}`, result))
+    .catch((error) => console.log(error.message));
+
     return res.status(CREATED).json(_.pick(newUser, ['name', 'email', 'location']));
 } 
