@@ -3,9 +3,8 @@ import { Request, Response } from 'express';
 import validateAuthReq from './Auth.validation';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import userModel from '../User/User.schema';
+import User from '../User/User.schema';
 
-const User = userModel;
 const { BAD_REQUEST, OK } = StatusCodes;
 
 

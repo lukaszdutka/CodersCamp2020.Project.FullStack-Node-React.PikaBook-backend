@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-export interface User {
+export interface IUser {
   _id: mongoose.Types.ObjectId,
   name: string,
   email: string,
@@ -8,4 +8,4 @@ export interface User {
   location?: string
 }
 
-export default User;
+export default IUser;
