@@ -8,7 +8,7 @@ if (!process.env.JWT_PRIVATE_KEY) {
     process.exit(1);
 }
 
-mongoose.connect(`mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false`, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.svu8r.mongodb.net/Pikabook?retryWrites=true&w=majority`, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
     logger.info("connected to db");
 })
 

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
-import Book from './Book.interface';
+import IBook from './Book.interface';
 
-const bookSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -28,6 +28,6 @@ const bookSchema = new mongoose.Schema({
   }
 });
 
-const bookModel = mongoose.model<Book & mongoose.Document>('Book', bookSchema);
+const Book = mongoose.model<IBook & mongoose.Document>('Book', schema);
 
-export default bookModel;
+export default Book;

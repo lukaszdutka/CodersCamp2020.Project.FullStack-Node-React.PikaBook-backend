@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
-import User from './User.interface';
+import IUser from './User.interface';
 
-const userSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true, 
@@ -22,6 +22,6 @@ const userSchema = new mongoose.Schema({
   location: String
 });
 
-const userModel = mongoose.model<User & mongoose.Document>('User', userSchema);
+const User = mongoose.model<IUser & mongoose.Document>('User', schema);
 
-export default userModel;
+export default User;

@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-interface Book {
+interface IBook {
   _id: mongoose.Types.ObjectId,
   name: string,
   author?: string[],
@@ -11,4 +11,4 @@ interface Book {
   ownerId: mongoose.Types.ObjectId
 }
 
-export default Book;
+export default IBook;

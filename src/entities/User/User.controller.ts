@@ -1,15 +1,13 @@
 import StatusCodes from "http-status-codes";
 import { Request, Response } from "express";
-import userModel from "./User.schema";
+import User from "./User.schema";
 import validateUser from './User.validation';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 import { sendMail } from "@shared/email";
-import logger from "@shared/Logger";
 
 
 const { BAD_REQUEST, OK, CREATED } = StatusCodes;
-const User = userModel;
 
 
 export const getUsers = async (req: Request, res: Response) => {

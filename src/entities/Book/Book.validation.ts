@@ -1,7 +1,7 @@
 import Joi, { ValidationResult } from 'joi';
-import BookReq from './Book.interface';
+import IBook from './Book.interface';
 
-const validateBookReq = (bookReq: BookReq): ValidationResult => {
+const validateBookReq = (book: IBook): ValidationResult => {
     const schema = Joi.object({
       name: Joi.string().required(),
       author: Joi.array().items(Joi.string()),
@@ -11,7 +11,7 @@ const validateBookReq = (bookReq: BookReq): ValidationResult => {
       description: Joi.string(),
       ownerId: Joi.string().pattern(/^[0-9a-fA-F]{24}$/).required()
     })
-    return schema.validate(bookReq);
+    return schema.validate(book);
 }
 
 export default validateBookReq;
