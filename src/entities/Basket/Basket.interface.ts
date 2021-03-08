@@ -7,13 +7,8 @@ export interface Basket{
     booksOffered: mongoose.Types.ObjectId[],
     booksRequested: mongoose.Types.ObjectId[],
     status: String
+    timeCreated: Date
 }
 
 export default Basket;
 
-// createdByUserId
-// targetUserId
-// booksOffered
-// booksRequested
-// status: pending/accepted/rejected/cancelled/offered/failedByRequestor/failedByTarget
-// timeCreated

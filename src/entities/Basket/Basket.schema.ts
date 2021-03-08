@@ -22,9 +22,14 @@ const basketSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'accepted','rejected','cancelled','offered','failedByRequestor','failedByTarget'],
         required: true
+    },
+    timeCreated: {
+        type: Date,
+        default: Date.now
     }
 });
 
 const basketModel = mongoose.model<Basket & mongoose.Document>('Basket', basketSchema);
+
 
 export default basketModel;
