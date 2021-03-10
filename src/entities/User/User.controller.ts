@@ -5,7 +5,7 @@ import validateUser from './User.validation';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 import Book from '../../entities/Book/Book.schema';
-import { sendMail } from "@shared/email";
+import { sendMail } from '../../shared/email';
 
 const { BAD_REQUEST, OK, CREATED } = StatusCodes;
 

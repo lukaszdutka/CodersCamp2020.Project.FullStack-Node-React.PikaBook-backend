@@ -1,6 +1,6 @@
 import './pre-start'; // Must be the first import
-import app from '@server';
-import logger from '@shared/Logger';
+import app from './Server';
+import logger from './shared/Logger';
 import mongoose from 'mongoose'
 
 if (!process.env.JWT_PRIVATE_KEY) {
