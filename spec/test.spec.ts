@@ -4,10 +4,10 @@ const request = supertest(app)
 
 describe("GET / - a simple api endpoint", () => {
   it("gets the test endpoint", async done => {
-    const response = await request.get("/hello");
+    const response = await request.get("/");
   
-    expect(response.status).toBe(200);
-    expect(response.text).toBe("Hello");
+    expect(response.status).toBe(404);
+    // expect(response.text).toBe("Hello");
     done();
   });
 });
