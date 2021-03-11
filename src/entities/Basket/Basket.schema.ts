@@ -3,19 +3,23 @@ import Basket from './Basket.interface';
 
 const basketSchema = new mongoose.Schema({
     createdByUserId: { 
-        type: mongoose.Types.ObjectId, 
+        type: mongoose.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     targetUserID: {
         type: mongoose.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     booksOffered: {
         type: [mongoose.Types.ObjectId],
+        ref: 'Book',
         required: true
     },
     booksRequested: {
         type: [mongoose.Types.ObjectId],
+        ref: 'Book',
         required: true
     },
     status: {
