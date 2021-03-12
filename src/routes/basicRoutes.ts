@@ -2,7 +2,7 @@ import UserRouter from './user';
 import BookRouter from './book';
 import AuthRouter from './auth';
 import MeRouter from './me';
-import MessageRouter from './message'
+import ConversationRouter from './conversation'
 import checkToken from  'express-jwt';
 import { Router } from 'express';
 
@@ -18,7 +18,7 @@ router
     .use('/me',
     checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
      MeRouter)
-    .use('/messages', MessageRouter)
+    .use('/conversations', ConversationRouter)
 
 // Export the base-router
 export default router;
