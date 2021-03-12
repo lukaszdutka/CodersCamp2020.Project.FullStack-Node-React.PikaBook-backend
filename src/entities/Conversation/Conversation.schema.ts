@@ -1,35 +1,42 @@
-import * as mongoose from 'mongoose';
-import IConversation from './Conversation.interface';
+import * as mongoose from "mongoose";
+import IConversation from "./Conversation.interface";
 
 const schema = new mongoose.Schema({
-  interlocutors: [{
+  interlocutors: [
+    {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
-  }], 
-  messages: [{
-    sender: {
+    },
+  ],
+  messages: [
+    {
+      sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-      }, 
-    recipient: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: "User",
         required: true,
       },
-    content: String, 
-    date: {
-      type: Date,
-      default: Date.now
-  }, 
-    read: {
-      type: Boolean, 
-      default: false
-  }
-}], 
+      recipient: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      content: String,
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+      read: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
 });
 
-const Conversation = mongoose.model<IConversation & mongoose.Document>('Conversation', schema);
+const Conversation = mongoose.model<IConversation & mongoose.Document>(
+  "Conversation",
+  schema
+);
 
 export default Conversation;

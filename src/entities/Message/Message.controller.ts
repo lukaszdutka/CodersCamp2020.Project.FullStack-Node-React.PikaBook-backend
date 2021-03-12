@@ -1,72 +1,79 @@
-import StatusCodes from 'http-status-codes';
-import { Request, Response } from 'express';
-import validateMessageReq from './Message.validation';
-import Conversation from '../Conversation/Conversation.schema';
-import User from '../User/User.schema';
+import StatusCodes from "http-status-codes";
+import { Request, Response } from "express";
+import validateMessageReq from "./Message.validation";
+import Conversation from "../Conversation/Conversation.schema";
+import User from "../User/User.schema";
 
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 
 export const sendMessage = async (req: Request, res: Response) => {
-    const { error } = validateMessageReq(req.body);
-    if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
-    const sender = await User.findById(req.user);
-    if (!sender) return res.status(BAD_REQUEST).send("The sender is not a logged user");
-    if (req.body.recipient == sender._id) {
-        return res.status(BAD_REQUEST).send("You can't send a message to yourself")  
-    }
-    const sentData = req.body;
-    const defaultData = {
-        sender: sender._id, 
-    }
-    const message = {...sentData, ...defaultData}
-    const conversation = await Conversation.count(
-        { interlocutors: { $all: [req.body.recipient, sender._id] }});
-    if (conversation === 0) {
-        const newConversation = new Conversation({
-            interlocutors: [
-                req.body.recipient,
-                sender._id
-            ], 
-            messages: [message]
-        })
-        try {
-            await newConversation.save()
-            return res.status(CREATED).json(message);
-        } catch (error) {
-            return res.status(BAD_REQUEST).send(error._message);
-        }
-    }
+  const { error } = validateMessageReq(req.body);
+  if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
+  const sender = await User.findById(req.user);
+  if (!sender)
+    return res.status(BAD_REQUEST).send("The sender is not a logged user");
+  if (req.body.recipient == sender._id) {
+    return res.status(BAD_REQUEST).send("You can't send a message to yourself");
+  }
+  const sentData = req.body;
+  const defaultData = {
+    sender: sender._id,
+  };
+  const message = { ...sentData, ...defaultData };
+  const conversation = await Conversation.count({
+    interlocutors: { $all: [req.body.recipient, sender._id] },
+  });
+  if (conversation === 0) {
+    const newConversation = new Conversation({
+      interlocutors: [req.body.recipient, sender._id],
+      messages: [message],
+    });
     try {
-        await Conversation.findOneAndUpdate( 
-            { interlocutors: { $all: [req.body.recipient, sender._id] }}, 
-            { $push: { 
-                messages: {
-                    $each: [message],
-                    $sort: {date: -1}
-                    }
-                }
-            })
-        return res.status(CREATED).json(message);
+      await newConversation.save();
+      return res.status(CREATED).json(message);
     } catch (error) {
-        return res.status(BAD_REQUEST).send(error._message);
+      return res.status(BAD_REQUEST).send(error._message);
     }
-}
+  }
+  try {
+    await Conversation.findOneAndUpdate(
+      { interlocutors: { $all: [req.body.recipient, sender._id] } },
+      {
+        $push: {
+          messages: {
+            $each: [message],
+            $sort: { date: -1 },
+          },
+        },
+      }
+    );
+    return res.status(CREATED).json(message);
+  } catch (error) {
+    return res.status(BAD_REQUEST).send(error._message);
+  }
+};
 
-export const updateReadMessagesByInterlocutorsId = async (req: Request, res: Response) => {
-    const sender = await User.findById(req.user);
-    if (!sender) return res.status(BAD_REQUEST).send("The sender is not a logged user");
-    try {
-        await Conversation
-        .updateOne( { interlocutors: { $all: [req.params.id, sender._id] } },
-            { $set:{
-                'messages.$[updateMessage].read': true
-            }}, {
-                "arrayFilters": [
-                  {"updateMessage.read" : false},
-                ]
-            });
-    return res.status(OK).send('Conversation status updated');
-    } catch (error) {
-        return res.status(BAD_REQUEST).send(error._message);
-    }
-}
+export const updateReadMessagesByInterlocutorsId = async (
+  req: Request,
+  res: Response
+) => {
+  const sender = await User.findById(req.user);
+  if (!sender)
+    return res.status(BAD_REQUEST).send("The sender is not a logged user");
+  try {
+    await Conversation.updateOne(
+      { interlocutors: { $all: [req.params.id, sender._id] } },
+      {
+        $set: {
+          "messages.$[updateMessage].read": true,
+        },
+      },
+      {
+        arrayFilters: [{ "updateMessage.read": false }],
+      }
+    );
+    return res.status(OK).send("Conversation status updated");
+  } catch (error) {
+    return res.status(BAD_REQUEST).send(error._message);
+  }
+};
