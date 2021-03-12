@@ -25,7 +25,7 @@ const basketSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['pending', 'accepted','rejected','cancelled','offered','failedByRequestor','failedByTarget'],
-        required: true
+        default: 'offered'
     },
     timeCreated: {
         type: Date,
