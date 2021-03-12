@@ -8,10 +8,10 @@ const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 export const addBasket = async (req: Request, res: Response) => {
     // const { error } = validateBasketReq(req.body);
     // if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
-    console.log(req.user)
+    console.log({createdByUserId: req.user})
     const basketData = req.body;
-    // const ownerData = {ownerId: req.user}
-    const basket = new Basket({...basketData})
+    const createdByUserId = {createdByUserId: req.user}
+    const basket = new Basket({...basketData, ...createdByUserId})
     try {
         await basket.save()
         return res.status(CREATED).json(basket);
