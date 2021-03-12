@@ -4,8 +4,7 @@ import Basket from './Basket.interface';
 const basketSchema = new mongoose.Schema({
     createdByUserId: { 
         type: mongoose.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'User'
     },
     targetUserID: {
         type: mongoose.Types.ObjectId,
@@ -25,7 +24,7 @@ const basketSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['pending', 'accepted','rejected','cancelled','offered','failedByRequestor','failedByTarget'],
-        required: true
+        default: 'offered',
     },
     timeCreated: {
         type: Date,
