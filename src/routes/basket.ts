@@ -9,7 +9,7 @@ router
     // .get('', getBaskets)
     // .get('/:id', getBasketById)
     // .post('', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), addBasket)
-    .patch('/:id', updateBasket)
+    .patch('/:id', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), updateBasket)
     // .delete('/:id', deleteBasket)
 
 
