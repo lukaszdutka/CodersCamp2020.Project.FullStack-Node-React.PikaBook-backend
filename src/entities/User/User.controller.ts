@@ -19,6 +19,7 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
     try {
         const user = await User.findById(req.params.id);
+        if (!user) return res.status(BAD_REQUEST).send('User not found');
         return res.status(OK).json(user);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
