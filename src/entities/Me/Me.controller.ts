@@ -1,8 +1,9 @@
 import StatusCodes from "http-status-codes";
-import { Request, Response } from "express";
+import { query, Request, Response } from "express";
 import User from "../User/User.schema";
 import Book from "../../entities/Book/Book.schema";
 import Conversation from "../Conversation/Conversation.schema";
+import Basket from "@entities/Basket/Basket.schema";
 
 const { BAD_REQUEST, OK, NOT_FOUND } = StatusCodes;
 
@@ -48,3 +49,25 @@ export const getConversationByInterlocutorsId = async (
     res.status(NOT_FOUND).send("There are no messages between users");
   res.status(OK).json(conversation);
 };
+
+
+export const getLoggedUserBaskets = async (
+  req: Request,
+  res: Response
+) => {
+  const sender = await User.findById(req.user);
+  console.log(sender?._id)
+  if (!sender) {
+    return res.status(BAD_REQUEST).send("The sender is not a logged user");
+  }
+  let { status } = req.query;
+  if ( status ) {
+    const baskets = await Basket.find({ $or: [{ createdByUserId: sender._id}, { targetUserID: sender._id }] });
+    return res.status(OK).json(baskets);
+  }
+  
+  }
+  return 
+  
+};
+}

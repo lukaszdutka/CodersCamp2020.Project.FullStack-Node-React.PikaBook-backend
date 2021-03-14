@@ -15,9 +15,7 @@ router
     .use('/users', UserRouter)
     .use('/books', BookRouter)
     .use('/auth', AuthRouter)
-    .use('/me',
-    checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
-     MeRouter)
+    .use('/me', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), MeRouter)
     .use('/conversations', ConversationRouter)
 
 // Export the base-router
