@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import User from "../User/User.schema";
 import Book from "../../entities/Book/Book.schema";
 import Conversation from "../Conversation/Conversation.schema";
+import Poke from "../Poke/Poke.schema";
 
 const { BAD_REQUEST, OK, NOT_FOUND } = StatusCodes;
 
@@ -48,3 +49,37 @@ export const getConversationByInterlocutorsId = async (
     res.status(NOT_FOUND).send("There are no messages between users");
   res.status(OK).json(conversation);
 };
+
+export const getAllPokes = async (req: Request, res: Response) => {
+  const { filter } = req.query;
+  let pokes;
+  if (filter === 'sent') {
+    pokes = await Poke
+      .find({ sender: req.user })
+      .populate('recipient', ['name', 'location'])
+      .populate('books')
+  } else if (filter === 'received') {
+    pokes = await Poke
+      .find({ recipient: req.user })
+      .populate('sender', ['name', 'location'])
+      .populate('books')
+  } else {
+    pokes = await Poke
+      .find({ $or:[ {'sender': req.user}, {'recipient': req.user}]})
+      .populate('recipient', ['name', 'location'])
+      .populate('sender', ['name', 'location'])
+      .populate('books')
+  }
+  res.status(OK).json(pokes);
+}
+
+export const getPokeByID = async (req: Request, res: Response) => {
+  const user = await User.findById(req.user);
+  if (!user) return res.status(BAD_REQUEST).send("There is no logged user");
+  const poke = await Poke.findById(req.params.id);
+  if (!poke) return res.status(NOT_FOUND).send("Poke does not exist");
+  if (!poke.recipient.equals(user._id) && !poke.sender?.equals(user._id)) {
+      return res.status(BAD_REQUEST).send("Can't read another user's poke")
+    }
+  return res.status(OK).json(poke);
+}
