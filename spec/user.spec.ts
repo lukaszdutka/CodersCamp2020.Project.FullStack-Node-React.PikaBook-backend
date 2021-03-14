@@ -113,7 +113,7 @@ describe("GET /", () => {
 
     const res = await request.get(`/api/users/6017daf7bbbbbbbbbbbbbbbb`);
     
-    expect(res.status).toBe(400); 
+    expect(res.status).toBe(404); 
     expect(res.body).toBeNull;
     expect(res.text).toBe("User not found");
 
