@@ -20,7 +20,7 @@ export const getBooks = async (req: Request, res: Response) => {
     else if (name) {
         books = await Book
         .find({name: new RegExp(name.toString(), "i")})
-        .populate('ownerId', 'name');
+        .populate('ownerId', ['location', 'name']);
     }
     else if (location) {
         const users = await User
