@@ -12,16 +12,16 @@ const basketSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    booksOffered: {
-        type: [mongoose.Schema.Types.ObjectId],
+    booksOffered: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
         required: true
-    },
-    booksRequested: {
-        type: [mongoose.Schema.Types.ObjectId],
+    }],
+    booksRequested: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
         required: true
-    },
+    }],
     status: {
         type: String,
         enum: ['pending', 'accepted','rejected','cancelled','offered','failedByRequestor','failedByTarget'],

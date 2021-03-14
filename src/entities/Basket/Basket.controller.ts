@@ -12,6 +12,8 @@ export const getBasketById = async (req: Request, res: Response) => {
             .findById(req.params.id)
             .populate('createdByUserId', 'name')
             .populate('targetUserID', 'name')
+            .populate('booksOffered', 'name')
+            .populate('booksRequested', 'name')
         return res.status(OK).json(basket);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
