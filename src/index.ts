@@ -7,9 +7,11 @@ if (!process.env.JWT_PRIVATE_KEY) {
     logger.info('FATAL ERROR: jwtPrivateKey is not defined')
     process.exit(1);
 }
-
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.svu8r.mongodb.net/Pikabook?retryWrites=true&w=majority`, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
-    logger.info("connected to db");
+const dbUrl = `${process.env.DB_URL}`
+    .replace('<USER>', process.env.DB_USER as string)
+    .replace('<PASSWORD>', process.env.DB_PASSWORD as string);
+mongoose.connect(dbUrl, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
+        logger.info("connected to db");
 })
 
 const db = mongoose.connection
