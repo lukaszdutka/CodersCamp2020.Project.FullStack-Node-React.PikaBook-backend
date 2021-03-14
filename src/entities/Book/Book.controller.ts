@@ -1,16 +1,38 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
 import validateBookReq from './Book.validation';
-import Book from '../../entities/Book/Book.schema'
+import Book from '../../entities/Book/Book.schema';
+import User from '../../entities/User/User.schema';
 
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
 
 
 export const getBooks = async (req: Request, res: Response) => {
-    const books = await Book
-        .find()
-        .populate('ownerId', 'name')
-    return res.status(OK).json(books);
+    let { name, location } = req.query;
+    let books = {}
+    if (location && name){
+        const users = await User
+        .find({ location: new RegExp(location.toString(), "i")}, '_id');
+        const userIds = users.map((val) => val._id.toString());
+        books = await Book.find({ownerId: { $in: userIds}, name: new RegExp(name.toString(), "i")})
+                        .populate('ownerId', ['location', 'name'])
+    }
+    else if (name) {
+        books = await Book
+        .find({name: new RegExp(name.toString(), "i")})
+        .populate('ownerId', ['location', 'name']);
+    }
+    else if (location) {
+        const users = await User
+        .find({ location: new RegExp(location.toString(), "i")}, '_id');
+        const userIds = users.map((val) => val._id.toString());
+        books = await Book.find({ownerId: { $in: userIds}})
+                        .populate('ownerId', ['location', 'name'])
+    } else {
+        books = await Book.find({})
+            .populate('ownerId', ['location', 'name'])
+    }
+    return res.status(OK).json(books)
 }
 
 
@@ -18,7 +40,7 @@ export const getBookById = async (req: Request, res: Response) => {
     try {
         const book = await Book
             .findById(req.params.id)
-            .populate('ownerId', 'name')
+            .populate('ownerId', ['location', 'name'])
         return res.status(OK).json(book);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
