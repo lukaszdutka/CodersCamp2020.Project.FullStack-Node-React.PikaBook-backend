@@ -40,7 +40,8 @@ export const getBookById = async (req: Request, res: Response) => {
     try {
         const book = await Book
             .findById(req.params.id)
-            .populate('ownerId', ['location', 'name'])
+            .populate('ownerId', ['location', 'name']);
+        if (!book) return res.status(BAD_REQUEST).send('Book not found');
         return res.status(OK).json(book);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
@@ -70,7 +71,7 @@ export const updateBook = async (req: Request, res: Response) => {
                 { $set: req.body }, 
                 { new: true })
             .populate('ownerId', 'name')
-        if (!book) return res.send(BAD_REQUEST).send('There is no book to be updated')
+        if (!book) return res.status(BAD_REQUEST).send('There is no book to be updated')
         return res.status(OK).json(book);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
