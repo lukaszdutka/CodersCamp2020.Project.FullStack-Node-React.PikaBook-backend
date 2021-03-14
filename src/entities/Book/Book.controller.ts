@@ -30,6 +30,7 @@ export const getBooks = async (req: Request, res: Response) => {
                         .populate('ownerId', ['location', 'name'])
     } else {
         books = await Book.find({})
+            .populate('ownerId', ['location', 'name'])
     }
     return res.status(OK).json(books)
 }
