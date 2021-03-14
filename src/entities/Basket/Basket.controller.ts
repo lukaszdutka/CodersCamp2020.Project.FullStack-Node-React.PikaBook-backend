@@ -16,13 +16,17 @@ export const addBasket = async (req: Request, res: Response) => {
     
     const booksToOffer = await Book.find({ownerId: req.user});
     const booksToOfferId: string[] = booksToOffer.map( book => book._id.toString());
-    const booksToOfferFromRequest: string[] = req.body.booksOffered
-    if (!booksToOfferFromRequest.every(bookId => booksToOfferId.indexOf(bookId) > -1)) {
+    const booksToOfferFromReqBody: string[] = req.body.booksOffered
+    if (!booksToOfferFromReqBody.every(bookId => booksToOfferId.indexOf(bookId) > -1)) {
         return res.status(BAD_REQUEST).send("You are offering a book that you don't have.")
     }
 
-    // console.log(booksToOfferId)
-    // console.log(req.body.booksOffered)
+    const booksToRequest = await Book.find({ownerId: req.body.targetUserID});
+    const booksToRequestId: string[] = booksToRequest.map( book => book._id.toString());
+    const booksToRequestFromReqBody: string[] = req.body.booksRequested
+    if (!booksToRequestFromReqBody.every(bookId => booksToRequestId.indexOf(bookId) > -1)) {
+        return res.status(BAD_REQUEST).send("You are requesting a book that target user doesn't have.")
+    }
 
     const basketData = req.body;
     const createdByUserId = {createdByUserId: req.user}
