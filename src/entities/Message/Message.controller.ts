@@ -3,8 +3,58 @@ import { Request, Response } from "express";
 import validateMessageReq from "./Message.validation";
 import Conversation from "../Conversation/Conversation.schema";
 import User from "../User/User.schema";
+import IUser from "../User/User.interface";
 
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+
+const conversationNotExist = async (recipient: string, senderId: string) => {
+  const conversation = await Conversation.count({
+    interlocutors: { $all: [recipient, senderId] },
+  });
+  return conversation === 0;
+};
+
+const createNewConversation = async (
+  recipient: string,
+  res: Response,
+  sender: IUser,
+  message: string
+) => {
+  const newConversation = new Conversation({
+    interlocutors: [recipient, sender._id],
+    messages: [message],
+  });
+  try {
+    await newConversation.save();
+    return res.status(CREATED).json(message);
+  } catch (error) {
+    return res.status(BAD_REQUEST).send(error._message);
+  }
+};
+
+const addMessageToConversation = async (
+  recipient: string,
+  res: Response,
+  senderId: string,
+  message: any
+) => {
+  try {
+    await Conversation.findOneAndUpdate(
+      { interlocutors: { $all: [recipient, senderId] } },
+      {
+        $push: {
+          messages: {
+            $each: [message],
+            $sort: { date: -1 },
+          },
+        },
+      }
+    );
+    return res.status(CREATED).json(message);
+  } catch (error) {
+    return res.status(BAD_REQUEST).send(error._message);
+  }
+};
 
 export const sendMessage = async (req: Request, res: Response) => {
   const { error } = validateMessageReq(req.body);
@@ -20,37 +70,21 @@ export const sendMessage = async (req: Request, res: Response) => {
     sender: sender._id,
   };
   const message = { ...sentData, ...defaultData };
-  const conversation = await Conversation.count({
-    interlocutors: { $all: [req.body.recipient, sender._id] },
-  });
-  if (conversation === 0) {
-    const newConversation = new Conversation({
-      interlocutors: [req.body.recipient, sender._id],
-      messages: [message],
-    });
-    try {
-      await newConversation.save();
-      return res.status(CREATED).json(message);
-    } catch (error) {
-      return res.status(BAD_REQUEST).send(error._message);
-    }
-  }
-  try {
-    await Conversation.findOneAndUpdate(
-      { interlocutors: { $all: [req.body.recipient, sender._id] } },
-      {
-        $push: {
-          messages: {
-            $each: [message],
-            $sort: { date: -1 },
-          },
-        },
-      }
+
+  if (await conversationNotExist(req.body.recipient, sender._id)) {
+    return await createNewConversation(
+      req.body.recipient,
+      res,
+      sender,
+      message
     );
-    return res.status(CREATED).json(message);
-  } catch (error) {
-    return res.status(BAD_REQUEST).send(error._message);
   }
+  return await addMessageToConversation(
+    req.body.recipient,
+    res,
+    sender._id,
+    message
+  );
 };
 
 export const updateReadMessagesByInterlocutorsId = async (
