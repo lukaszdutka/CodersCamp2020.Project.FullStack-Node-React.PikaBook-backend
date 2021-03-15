@@ -2,6 +2,7 @@ import UserRouter from './user';
 import BookRouter from './book';
 import BasketRouter from './basket';
 import AuthRouter from './auth';
+import PokeRouter from './poke';
 import MeRouter from './me';
 import ConversationRouter from './conversation'
 import checkToken from  'express-jwt';
@@ -18,6 +19,7 @@ router
     .use('/baskets', BasketRouter)
     .use('/auth', AuthRouter)
     .use('/me', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), MeRouter)
+    .use('/pokes', PokeRouter)
     .use('/conversations', ConversationRouter)
 
 // Export the base-router
