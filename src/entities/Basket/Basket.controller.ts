@@ -76,3 +76,4 @@ export const updateBasket = async (req: Request, res: Response) => {
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
     }
+}
