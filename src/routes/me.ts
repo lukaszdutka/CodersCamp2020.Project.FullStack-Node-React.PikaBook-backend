@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { getLoggedUser, getLoggedUserBooks, getConversationByInterlocutorsId, getAllConversations } from '../entities/Me/Me.controller';
+import checkToken from  'express-jwt';
+import { getLoggedUser, getLoggedUserBooks, getLoggedUserBaskets, getConversationByInterlocutorsId, getAllConversations } from '../entities/Me/Me.controller';
 
 const router = Router();
 
@@ -11,6 +12,11 @@ getLoggedUser );
 //get all books of the currently logged user
 router.get('/books', 
 getLoggedUserBooks );
+
+//get all books of the currently logged user
+router.get('/baskets', 
+checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
+getLoggedUserBaskets );
 
 //get all conversations of the currently logged user
 router.get('/conversations', 

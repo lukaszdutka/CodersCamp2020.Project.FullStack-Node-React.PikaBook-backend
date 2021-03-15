@@ -1,5 +1,6 @@
 import UserRouter from './user';
 import BookRouter from './book';
+import BasketRouter from './basket';
 import AuthRouter from './auth';
 import MeRouter from './me';
 import ConversationRouter from './conversation'
@@ -14,6 +15,7 @@ const router = Router();
 router
     .use('/users', UserRouter)
     .use('/books', BookRouter)
+    .use('/baskets', BasketRouter)
     .use('/auth', AuthRouter)
     .use('/me',
     checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
