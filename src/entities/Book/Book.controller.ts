@@ -3,8 +3,9 @@ import { Request, Response } from 'express';
 import validateBookReq from './Book.validation';
 import Book from '../../entities/Book/Book.schema';
 import User from '../../entities/User/User.schema';
+import { NOTFOUND } from 'node:dns';
 
-const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+const { BAD_REQUEST, CREATED, OK, NOT_FOUND } = StatusCodes;
 
 
 export const getBooks = async (req: Request, res: Response) => {
@@ -41,7 +42,7 @@ export const getBookById = async (req: Request, res: Response) => {
         const book = await Book
             .findById(req.params.id)
             .populate('ownerId', ['location', 'name']);
-        if (!book) return res.status(BAD_REQUEST).send('Book not found');
+        if (!book) return res.status(NOT_FOUND).send('Book not found');
         return res.status(OK).json(book);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
@@ -71,7 +72,7 @@ export const updateBook = async (req: Request, res: Response) => {
                 { $set: req.body }, 
                 { new: true })
             .populate('ownerId', 'name')
-        if (!book) return res.status(BAD_REQUEST).send('There is no book to be updated')
+        if (!book) return res.status(NOT_FOUND).send('There is no book to be updated')
         return res.status(OK).json(book);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
@@ -82,7 +83,7 @@ export const deleteBook = async (req: Request, res: Response) => {
     try {
         const deletedBook = await Book
             .findOneAndRemove({ _id: req.params.id, ownerId: req.user });
-        if (!deletedBook) return res.send(BAD_REQUEST).send('There is no book to be updated')
+        if (!deletedBook) return res.status(NOT_FOUND).send('There is no book to be deleted')
         return res.status(OK).json(deletedBook);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
