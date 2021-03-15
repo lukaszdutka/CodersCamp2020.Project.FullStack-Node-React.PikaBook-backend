@@ -2,6 +2,7 @@ import StatusCodes from "http-status-codes";
 import { Request, Response } from "express";
 import User from "../User/User.schema";
 import Book from "../../entities/Book/Book.schema";
+import Basket from "@entities/Basket/Basket.schema";
 import Conversation from "../Conversation/Conversation.schema";
 import Poke from "../Poke/Poke.schema";
 
@@ -17,6 +18,11 @@ export const getLoggedUser = async (req: Request, res: Response) => {
 export const getLoggedUserBooks = async (req: Request, res: Response) => {
   const books = await Book.find({ ownerId: req.user });
   res.status(OK).json(books);
+};
+
+export const getLoggedUserBaskets = async (req: Request, res: Response) => {
+  const baskets = await Basket.find({ createdByUserId: req.user });
+  res.status(OK).json(baskets);
 };
 
 export const getAllConversations = async (req: Request, res: Response) => {
@@ -53,25 +59,24 @@ export const getConversationByInterlocutorsId = async (
 export const getAllPokes = async (req: Request, res: Response) => {
   const { filter } = req.query;
   let pokes;
-  if (filter === 'sent') {
-    pokes = await Poke
-      .find({ sender: req.user })
-      .populate('recipient', ['name', 'location'])
-      .populate('books')
-  } else if (filter === 'received') {
-    pokes = await Poke
-      .find({ recipient: req.user })
-      .populate('sender', ['name', 'location'])
-      .populate('books')
+  if (filter === "sent") {
+    pokes = await Poke.find({ sender: req.user })
+      .populate("recipient", ["name", "location"])
+      .populate("books");
+  } else if (filter === "received") {
+    pokes = await Poke.find({ recipient: req.user })
+      .populate("sender", ["name", "location"])
+      .populate("books");
   } else {
-    pokes = await Poke
-      .find({ $or:[ {'sender': req.user}, {'recipient': req.user}]})
-      .populate('recipient', ['name', 'location'])
-      .populate('sender', ['name', 'location'])
-      .populate('books')
+    pokes = await Poke.find({
+      $or: [{ sender: req.user }, { recipient: req.user }],
+    })
+      .populate("recipient", ["name", "location"])
+      .populate("sender", ["name", "location"])
+      .populate("books");
   }
   res.status(OK).json(pokes);
-}
+};
 
 export const getPokeByID = async (req: Request, res: Response) => {
   const user = await User.findById(req.user);
@@ -79,7 +84,7 @@ export const getPokeByID = async (req: Request, res: Response) => {
   const poke = await Poke.findById(req.params.id);
   if (!poke) return res.status(NOT_FOUND).send("Poke does not exist");
   if (!poke.recipient.equals(user._id) && !poke.sender?.equals(user._id)) {
-      return res.status(BAD_REQUEST).send("Can't read another user's poke")
-    }
+    return res.status(BAD_REQUEST).send("Can't read another user's poke");
+  }
   return res.status(OK).json(poke);
-}
+};

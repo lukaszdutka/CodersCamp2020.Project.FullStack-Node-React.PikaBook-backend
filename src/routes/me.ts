@@ -4,6 +4,7 @@ import {
   getLoggedUserBooks,
   getConversationByInterlocutorsId,
   getAllConversations,
+  getLoggedUserBaskets,
   getAllPokes,
   getPokeByID
 } from "../entities/Me/Me.controller";
@@ -15,6 +16,9 @@ router.get("", getLoggedUser);
 
 //get all books of the currently logged user
 router.get("/books", getLoggedUserBooks);
+
+//get all baskets of the currently logged user
+router.get('/baskets', getLoggedUserBaskets );
 
 //get all conversations of the currently logged user
 router.get("/conversations", getAllConversations);

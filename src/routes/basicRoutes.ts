@@ -1,5 +1,6 @@
 import UserRouter from './user';
 import BookRouter from './book';
+import BasketRouter from './basket';
 import AuthRouter from './auth';
 import PokeRouter from './poke';
 import MeRouter from './me';
@@ -15,6 +16,7 @@ const router = Router();
 router
     .use('/users', UserRouter)
     .use('/books', BookRouter)
+    .use('/baskets', BasketRouter)
     .use('/auth', AuthRouter)
     .use('/pokes', PokeRouter)
     .use('/me',
