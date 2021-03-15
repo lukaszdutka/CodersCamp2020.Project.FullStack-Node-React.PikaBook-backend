@@ -20,7 +20,7 @@ Where users can finally make their reader's dreams come true. All of us, the rea
 * [Agata Ludwiczyńska](https://github.com/AgataLudwiczynska)
 * [Daria Dziubałtowska](https://github.com/daria305) (Tech Lead)
 * [Małgorzata Dziewit](https://github.com/memeraki) (Develepment Manager)
-* [Mariusz Smarż](https://github.com/mariusz-sm)
+* [Mariusz Smarż](https://github.com/mariusz-sm) (Business Owner)
 
 Mentor: [Łukasz Dutka](https://github.com/lukaszdutka)
 ___
