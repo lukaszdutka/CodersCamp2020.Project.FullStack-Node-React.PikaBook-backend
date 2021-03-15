@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-type StatusType = 'pending'| 'accepted'|'rejected'|'cancelled'|'offered'|'failedByRequestor'|'failedByTarget'
+type StatusType = 'pending'| 'accepted'|'rejected'|'cancelled'|'offered'|'failedByRequestor'|'failedByTarget'|'success'
 
 export interface IBasket{
     _id: mongoose.Types.ObjectId,
