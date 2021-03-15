@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import checkToken from  'express-jwt';
-import { sendMessage, updateReadMessagesByInterlocutorsId } from '@entities/Message/Message.controller';
+import { sendMessage, updateReadMessagesByInterlocutorsId } from '../entities/Message/Message.controller';
 
 const router = Router();
 
