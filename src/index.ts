@@ -4,8 +4,8 @@ import logger from './shared/Logger';
 import mongoose from 'mongoose'
 
 if (!process.env.JWT_PRIVATE_KEY) {
-    logger.err('FATAL ERROR: jwtPrivateKey is not defined')
-    process.exit(1);
+    logger.info('FATAL ERROR: jwtPrivateKey is not defined')
+    // process.exit(1);
 }
 const dbUrl = `${process.env.DB_URL}`
     .replace('<USER>', process.env.DB_USER as string)
