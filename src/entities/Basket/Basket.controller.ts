@@ -1,11 +1,23 @@
+import { IBasket } from './Basket.interface';
 import StatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
 import validateBasketReq from './Basket.validation';
 import Basket from './Basket.schema';
 import User from '../User/User.schema'
 import Book from '../Book/Book.schema'
+import IUser from '@entities/User/User.interface';
+import IBook from '@entities/Book/Book.interface';
 
 const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+
+const validateBooksOwner = (books: IBook[], booksFromReqBody: string[]) => {
+    const booksToOfferId: string[] = books.map( book => book._id.toString());
+    const booksToOfferFromReqBody = booksFromReqBody.map( id => id.toString())
+    if (!booksToOfferFromReqBody.every(bookId => booksToOfferId.indexOf(bookId) > -1)) {
+        return false
+    }
+    return true
+}
 
 export const addBasket = async (req: Request, res: Response) => {
     const { error } = validateBasketReq(req.body);
@@ -15,16 +27,14 @@ export const addBasket = async (req: Request, res: Response) => {
     if (user?._id == req.body.targetUserID) return res.status(BAD_REQUEST).send('targetUserID should be different that createdByUserId')
     
     const booksToOffer = await Book.find({ownerId: req.user});
-    const booksToOfferId: string[] = booksToOffer.map( book => book._id.toString());
     const booksToOfferFromReqBody: string[] = req.body.booksOffered
-    if (!booksToOfferFromReqBody.every(bookId => booksToOfferId.indexOf(bookId) > -1)) {
+    if (!validateBooksOwner(booksToOffer, booksToOfferFromReqBody)) {
         return res.status(BAD_REQUEST).send("You are offering a book that you don't have.")
     }
 
     const booksToRequest = await Book.find({ownerId: req.body.targetUserID});
-    const booksToRequestId: string[] = booksToRequest.map( book => book._id.toString());
     const booksToRequestFromReqBody: string[] = req.body.booksRequested
-    if (!booksToRequestFromReqBody.every(bookId => booksToRequestId.indexOf(bookId) > -1)) {
+    if (!validateBooksOwner(booksToRequest, booksToRequestFromReqBody)) {
         return res.status(BAD_REQUEST).send("You are requesting a book that target user doesn't have.")
     }
 
