@@ -8,8 +8,9 @@ export interface IBasket{
     targetUserID: mongoose.Types.ObjectId,
     booksOffered: mongoose.Types.ObjectId[],
     booksRequested: mongoose.Types.ObjectId[],
-    status: StatusType,
-    timeCreated: Date
+    status?: StatusType,
+    timeCreated?: Date
 }
 
 export default IBasket;
+
