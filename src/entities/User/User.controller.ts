@@ -5,7 +5,7 @@ import validateUser from './User.validation';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 import Book from '../../entities/Book/Book.schema';
-import { sendMail } from "@shared/email";
+import { sendMail } from '../../shared/email';
 
 const { BAD_REQUEST, OK, CREATED } = StatusCodes;
 
@@ -19,6 +19,7 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
     try {
         const user = await User.findById(req.params.id);
+        if (!user) return res.status(BAD_REQUEST).send('User not found');
         return res.status(OK).json(user);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);

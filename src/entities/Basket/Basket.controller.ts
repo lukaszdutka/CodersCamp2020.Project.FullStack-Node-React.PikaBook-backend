@@ -8,7 +8,24 @@ import Book from '../Book/Book.schema'
 import IUser from '@entities/User/User.interface';
 import IBook from '@entities/Book/Book.interface';
 
-const { BAD_REQUEST, CREATED, OK } = StatusCodes;
+const { BAD_REQUEST, FORBIDDEN, CREATED, OK } = StatusCodes;
+
+export const getBasketById = async (req: Request, res: Response) => {
+    const user = await User.findById(req.user);
+    try {
+        const basket = await Basket
+            .findById(req.params.id)
+            .populate('createdByUserId', 'name')
+            .populate('targetUserID', 'name')
+            .populate('booksOffered', 'name')
+            .populate('booksRequested', 'name')
+        if (!basket?.createdByUserId?.equals(user?._id) && !basket?.targetUserID.equals(user?._id)) {
+            return res.status(FORBIDDEN).send("Basket does not belong to the user")}   
+        return res.status(OK).json(basket);
+    } catch (error) {
+        return res.status(BAD_REQUEST).send(error.message);
+    }
+}
 
 const validateBooksOwner = (books: IBook[], booksFromReqBody: string[]) => {
     const booksToOfferId: string[] = books.map( book => book._id.toString());

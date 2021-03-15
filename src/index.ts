@@ -1,15 +1,17 @@
 import './pre-start'; // Must be the first import
-import app from '@server';
-import logger from '@shared/Logger';
+import app from './Server';
+import logger from './shared/Logger';
 import mongoose from 'mongoose'
 
 if (!process.env.JWT_PRIVATE_KEY) {
-    logger.info('FATAL ERROR: jwtPrivateKey is not defined')
+    logger.err('FATAL ERROR: jwtPrivateKey is not defined')
     process.exit(1);
 }
-
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.svu8r.mongodb.net/Pikabook?retryWrites=true&w=majority`, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
-    logger.info("connected to db");
+const dbUrl = `${process.env.DB_URL}`
+    .replace('<USER>', process.env.DB_USER as string)
+    .replace('<PASSWORD>', process.env.DB_PASSWORD as string);
+mongoose.connect(dbUrl, {useNewUrlParser: true, useCreateIndex:true, useUnifiedTopology: true}, () => {
+        logger.info("connected to db");
 })
 
 const db = mongoose.connection
