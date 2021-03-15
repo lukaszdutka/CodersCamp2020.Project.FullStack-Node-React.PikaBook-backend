@@ -3,7 +3,7 @@ import { query, Request, Response } from "express";
 import User from "../User/User.schema";
 import Book from "../../entities/Book/Book.schema";
 import Conversation from "../Conversation/Conversation.schema";
-import Basket from "@entities/Basket/Basket.schema";
+import Basket from "../Basket/Basket.schema";
 
 const { BAD_REQUEST, OK, NOT_FOUND } = StatusCodes;
 
@@ -62,12 +62,10 @@ export const getLoggedUserBaskets = async (
   }
   let { status } = req.query;
   if ( status ) {
-    const baskets = await Basket.find({ $or: [{ createdByUserId: sender._id}, { targetUserID: sender._id }] });
+    const baskets = await Basket.find({$or: [{ createdByUserId: sender._id as string}, { targetUserID: sender._id as string }]})
+                                .where('status').equals(status)
     return res.status(OK).json(baskets);
   }
-  
-  }
-  return 
-  
+  const baskets = await Basket.find({$or: [{ createdByUserId: sender._id as string}, { targetUserID: sender._id as string }]});
+  return res.status(OK).json(baskets);
 };
-}
