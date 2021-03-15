@@ -5,7 +5,7 @@ ___
 
 **Mangos Team** presents a system for books exchange. 
 
-    Where users can   finally make their reader's dreams come true. All of us, the readers, are struggling with the same problem - after some time our bookshelves are full of volumes, series of books we've already read. As there are books we want to keep for the life, there are some that were ment to be read only once (We feel sorry for them too). PikaBook can give them second life! Our API allows you to find other people that are willing to adopt your unneeded books in exchange for readings they offers. 
+Where users can finally make their reader's dreams come true. All of us, the readers, are struggling with the same problem - after some time our bookshelves are full of volumes, series of books we've already read. As there are books we want to keep for life, there are some that were meant to be read only once (We feel sorry for them too). PikaBook can give them a second life! Our API allows you to find other people that are willing to adopt your unneeded books in exchange for readings they offers.
 
 ## Used technologies
 - Node.js / Express
