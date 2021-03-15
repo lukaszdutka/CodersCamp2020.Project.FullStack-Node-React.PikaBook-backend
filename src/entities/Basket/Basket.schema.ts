@@ -1,30 +1,31 @@
 import * as mongoose from 'mongoose';
-import Basket from './Basket.interface';
+import IBasket from './Basket.interface';
 
 const basketSchema = new mongoose.Schema({
     createdByUserId: { 
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     targetUserID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    booksOffered: {
-        type: [mongoose.Schema.Types.ObjectId],
+    booksOffered: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
         required: true
-    },
-    booksRequested: {
-        type: [mongoose.Schema.Types.ObjectId],
+    }],
+    booksRequested: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
         required: true
-    },
+    }],
     status: {
         type: String,
         enum: ['pending', 'accepted','rejected','cancelled','offered','failedByRequestor','failedByTarget'],
-        default: 'offered',
+        default: 'offered'
     },
     timeCreated: {
         type: Date,
@@ -32,7 +33,7 @@ const basketSchema = new mongoose.Schema({
     }
 });
 
-const basketModel = mongoose.model<Basket & mongoose.Document>('Basket', basketSchema);
+const Basket = mongoose.model<IBasket & mongoose.Document>('Basket', basketSchema);
 
 
-export default basketModel;
+export default Basket;

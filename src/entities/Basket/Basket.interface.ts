@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 
 type StatusType = 'pending'| 'accepted'|'rejected'|'cancelled'|'offered'|'failedByRequestor'|'failedByTarget'|'success'
 
-export interface Basket{
+export interface IBasket{
     _id: mongoose.Types.ObjectId,
     createdByUserId? : mongoose.Types.ObjectId,
     targetUserID: mongoose.Types.ObjectId,
@@ -12,5 +12,5 @@ export interface Basket{
     timeCreated?: Date
 }
 
-export default Basket;
+export default IBasket;
 
