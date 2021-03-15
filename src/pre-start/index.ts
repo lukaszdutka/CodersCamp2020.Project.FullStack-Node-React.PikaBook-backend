@@ -24,6 +24,6 @@ import commandLineArgs from 'command-line-args';
         path: path.join(__dirname, `env/${options.env}.env`),
     });
     if (result2.error) {
-        throw result2.error;
+        // throw result2.error;
     }
 })();
