@@ -1,6 +1,6 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
-import validateBasketReq from './Basket.validation';
+import validateBasketReq, { validateBasketStatus } from './Basket.validation';
 import Basket from './Basket.schema';
 import User from "../User/User.schema"
 
@@ -43,13 +43,12 @@ export const addBasket = async (req: Request, res: Response) => {
 
 export const updateBasket = async (req: Request, res: Response) => {
     
+    const { error } = validateBasketStatus(req.body);
+    if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
+
     const user = await User.findById(req.user);
     if (!user)
     return res.status(BAD_REQUEST).send("The user is not logged in");
-
-    if( !req.body.status ) {
-        return res.status(BAD_REQUEST).send('Wrong data to update');
-    }
 
     try {
         const basket = await Basket
