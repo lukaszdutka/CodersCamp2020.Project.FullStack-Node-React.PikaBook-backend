@@ -53,6 +53,92 @@ To use most of API functionalities, you need to make an account and authorize yo
         "email":
     }
 ```
+---
+## API functionalities
+ - create an accaunt and log in to the system
+ - add and remove books to/from their collection
+ - filter books by users, location or title
+ - user can initiate exchange with other user, propose its own books for other user's titles by creating a basket
+ - possible to change basket status to track the book exchange
+ - users can communicate over messages to agree on a details of the exchange
 
+## Books
 
+Get the full list of all books, filter by `location`, `name` of the book
 
+    GET /api/books
+    GET /api/books?name=book&location=city
+
+Get a book by id
+
+    GET /api/books/:id
+
+Add book
+
+    POST /api/books
+
+Update one of actually logged in user books
+
+    PUT /api/books/:id
+
+Delete book of actually logged in user
+
+    DELETE /api/books/:id
+
+## User
+
+Get the list of all users
+
+    GET /api/users
+
+Get a user by id
+
+    GET /api/users/:id/
+
+Get user's books by id
+
+    GET /api/users/:id/books
+
+## Sending messages between users
+
+Send a new messaage
+
+    POST /api/conversations
+
+Update a message
+
+    PUT /api/conversations
+
+## Basket for books exchange
+Available basket's status codes: `'pending', 'accepted', 'rejected', 'cancelled', 'offered','failedByRequestor', 'failedByTarget', 'success'`
+
+Create a basket
+
+    POST /api/baskets
+
+Get a basket by id
+
+    GET /api/baskets/:id
+
+## Logged user specyfic actions
+
+Get a currently logged user
+
+    GET /api/me/
+
+Get all books of the currently logged user
+
+    GET /api/me/books
+
+Get all baskets of the currently logged user, possible to filter by `status`
+
+    GET /api/me/baskets
+    GET /api/me/baskets=offered
+
+Get all conversations of the currently logged user
+
+    GET /api/me/conversations
+
+Get a conversation with a specific user
+    
+    GET /api/me/conversations/:id
