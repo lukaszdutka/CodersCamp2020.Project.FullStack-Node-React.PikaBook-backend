@@ -29,6 +29,9 @@ router.get("/conversations/:id", getConversationByInterlocutorsId);
 //get all pokes of the currently logged user
 router.get('/pokes', getAllPokes);
 
+//get all baskets of currently logged user
+router.get('/baskets', getLoggedUserBaskets);
+
 // get a poke by its ID 
 router.get('/pokes/:id', getPokeByID)
 
