@@ -59,6 +59,7 @@ To use most of API functionalities, you need to make an account and authorize yo
  - user can initiate exchange with other user, propose its own books for other user's titles by creating a basket
  - possible to change basket status to track the book exchange
  - users can communicate over messages to agree on a details of the exchange
+ - pokes - interaction between users, to let others know you are interested in one of their books
 
 ## Books
 
@@ -117,8 +118,22 @@ Create a basket
 Get a basket by id
 
     GET /api/baskets/:id
+    
+Update a basket
 
-## Logged user specyfic actions
+    PUT /api/baskets/:id
+
+## Pokes
+
+Poke a user
+
+    POST /api/pokes
+ 
+ Update a poke
+ 
+    POST /api/pokes/:id
+
+## Logged user specific actions
 
 Get a currently logged user
 
@@ -140,3 +155,16 @@ Get all conversations of the currently logged user
 Get a conversation with a specific user
     
     GET /api/me/conversations/:id
+    
+Get all pokes of the currently logged user
+
+    GET /api/me/pokes
+    
+Get a poke by its ID 
+    
+    GET /api/me/pokes/:id
+
+Get all baskets of currently logged user
+    
+    GET /api/me/baskets
+
