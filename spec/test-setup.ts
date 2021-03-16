@@ -39,7 +39,6 @@ module.exports = {
               email: users[0].email,
               password: users[0].password
             });
-          
     });
 
     // Disconnect Mongoose

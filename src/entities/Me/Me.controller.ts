@@ -1,8 +1,8 @@
 import StatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
 import User from '../User/User.schema';
-import Book from '../../entities/Book/Book.schema';
-import Basket from '@entities/Basket/Basket.schema';
+import Book from '../Book/Book.schema';
+import Basket from '../Basket/Basket.schema';
 import Conversation from "../Conversation/Conversation.schema";
 
 const { BAD_REQUEST, OK, NOT_FOUND } = StatusCodes;

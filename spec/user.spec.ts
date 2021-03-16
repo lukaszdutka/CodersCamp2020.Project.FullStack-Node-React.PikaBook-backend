@@ -7,7 +7,7 @@ import User from '../src/entities/User/User.schema';
 import IUser from '../src/entities/User/User.interface';
 const { setupDB } = require("./test-setup");
 
-setupDB('endpoint-testing', true);
+setupDB('endpoint-testing');
 
 export const users: IUser[] = [
   {
@@ -135,3 +135,38 @@ describe("GET /", () => {
   });   
 
 })
+
+describe("GET /me", () => {
+  
+  it("returns logged user info", async () => {
+
+    let auth = {
+      token: ''
+    };
+    let res = await request.post('/api/auth/')
+    .send({
+      email: users[0].email,
+      password: users[0].password
+    });
+
+    expect(res.body.token).toBeTruthy;
+    auth.token = res.body.token;
+    
+     res = await request.get("/api/me/")
+       .set("Authorization", 'Bearer ' + auth.token); 
+    
+    expect(res.status).toBe(200);
+    expect(res.body._id).toBeTruthy;
+    expect(res.body.name).toBeTruthy;
+    expect(res.body.email).toBeTruthy;
+  });
+
+  it("returns error: no token", async () => {
+
+    const res = await request.get("/api/me/")
+    
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBeTruthy;
+    expect(res.body.error).toBe("No authorization token was found");
+  });
+});
