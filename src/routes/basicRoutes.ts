@@ -7,10 +7,29 @@ import MeRouter from './me';
 import ConversationRouter from './conversation'
 import checkToken from  'express-jwt';
 import { Router } from 'express';
+import cors from "cors";
 
 
 // Init router and path
 const router = Router();
+
+
+// Add cors
+const options: cors.CorsOptions = {
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'X-Access-Token',
+    ],
+    credentials: true,
+    methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+  };
+  
+//use cors middleware
+router.use(cors(options));
 
 // Add sub-routes
 router
