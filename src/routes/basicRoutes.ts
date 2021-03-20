@@ -13,23 +13,25 @@ import cors from "cors";
 // Init router and path
 const router = Router();
 
+if (process.env.NODE_ENV === 'production') {
+    // Add cors
+    const corsOptions: cors.CorsOptions = {
+        allowedHeaders: [
+        'Origin',
+        'X-Requested-With',
+        'Content-Type',
+        'Accept',
+        'X-Access-Token',
+        ],
+        credentials: true,
+        methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
+        preflightContinue: false,
+    };
+    
+    //use cors middleware
+    router.use(cors(corsOptions));
+}
 
-// Add cors
-const options: cors.CorsOptions = {
-    allowedHeaders: [
-      'Origin',
-      'X-Requested-With',
-      'Content-Type',
-      'Accept',
-      'X-Access-Token',
-    ],
-    credentials: true,
-    methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-  };
-  
-//use cors middleware
-router.use(cors(options));
 
 // Add sub-routes
 router

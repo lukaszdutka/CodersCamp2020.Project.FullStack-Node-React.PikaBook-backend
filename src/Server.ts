@@ -28,11 +28,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Security
-
-// app.use(helmet.permittedCrossDomainPolicies({
-//     permittedPolicies: "all",
-//     }));
-
+if (process.env.NODE_ENV === 'production') {
+    app.use(helmet());
+}
 
 // Add APIs
 app.use('/api', BaseRouter);

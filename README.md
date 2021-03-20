@@ -28,8 +28,7 @@ ___
 **Local set up**
 1. Clone the repo
 2. `npm install`
-4. update `src/pre-start/env/developement.env` file with your Mongo database creadentials`DB_PASSWORD=, DB_USER=
-5. update `src/pre-start/env/developement.env` file with your Mongo database url `BD_URL=` and placeholders for credentials, e.g. `mongodb+srv://<USER>:<PASSWORD>@mycluster.example.net`
+5. update `src/pre-start/env/developement.env` file with your Mongo database url `BD_URL=` 
 6. `npm start:dev`
 
 ### Registration

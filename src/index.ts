@@ -1,13 +1,8 @@
 import './pre-start'; // Must be the first import
 import app from './Server';
 import logger from './shared/Logger';
-import mongoose from 'mongoose'
-import cors from "cors";
+import mongoose from 'mongoose';
 
-
-// Add cors
-app.use(cors());
-app.options('*', cors);  // enable pre-flight
 
 if (!process.env.JWT_PRIVATE_KEY) {
     logger.err('FATAL ERROR: jwtPrivateKey is not defined')
