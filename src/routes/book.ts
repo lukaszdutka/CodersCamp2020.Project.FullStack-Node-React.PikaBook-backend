@@ -7,7 +7,7 @@ const router = Router();
 
 
 router
-    .get('', getBooks)
+    .get('', cors(), getBooks)
     .get('/:id',cors(), getBookById)
     .post('', 
         checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
