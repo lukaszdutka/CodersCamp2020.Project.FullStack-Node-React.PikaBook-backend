@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import checkToken from  'express-jwt';
 import { addBook, deleteBook, getBookById, getBooks, updateBook } from '../entities/Book/Book.controller';
-import cors from "cors";
 
 const router = Router();
 
