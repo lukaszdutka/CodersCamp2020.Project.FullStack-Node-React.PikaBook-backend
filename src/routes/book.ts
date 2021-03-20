@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import checkToken from  'express-jwt';
 import { addBook, deleteBook, getBookById, getBooks, updateBook } from '../entities/Book/Book.controller';
+import cors from "cors";
 
 const router = Router();
 
 
 router
     .get('', getBooks)
-    .get('/:id', getBookById)
+    .get('/:id',cors(), getBookById)
     .post('', 
         checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), 
         addBook)
