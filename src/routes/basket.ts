@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import checkToken from  'express-jwt';
-import { getBasketById, addBasket, updateBasket } from '@entities/Basket/Basket.controller';
+import { getBasketById, addBasket, updateBasket } from '../entities/Basket/Basket.controller';
 
 const router = Router();
 

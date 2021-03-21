@@ -5,8 +5,8 @@ import validateBasketReq, { validateBasketStatus } from './Basket.validation';
 import Basket from './Basket.schema';
 import User from '../User/User.schema'
 import Book from '../Book/Book.schema'
-import IUser from '@entities/User/User.interface';
-import IBook from '@entities/Book/Book.interface';
+import IUser from '../User/User.interface';
+import IBook from '../Book/Book.interface';
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
