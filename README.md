@@ -28,7 +28,7 @@ ___
 **Local set up**
 1. Clone the repo
 2. `npm install`
-5. update `src/pre-start/env/developement.env` file with your Mongo database url `BD_URL=` 
+5. update `src/pre-start/env/developement.env` file with your Mongo database url `DATABASE_URL=` 
 6. `npm start:dev`
 
 ### Registration
