@@ -1,12 +1,11 @@
-import { IBasket } from './Basket.interface';
 import StatusCodes from 'http-status-codes';
 import { Request, Response } from 'express';
 import validateBasketReq, { validateBasketStatus } from './Basket.validation';
 import Basket from './Basket.schema';
-import User from '../User/User.schema'
-import Book from '../Book/Book.schema'
-import IUser from '@entities/User/User.interface';
-import IBook from '@entities/Book/Book.interface';
+import User from '../User/User.schema';
+import Book from '../Book/Book.schema';
+import IBook from '../Book/Book.interface';
+import { getStatusValue } from '../Basket/Basket.interface'
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -93,6 +92,10 @@ export const updateBasket = async (req: Request, res: Response) => {
 
         if (basket.status === req.body.status) {
             return res.status(OK).send('Basket status did not change (new status is same as current status)');
+        }
+
+        if (getStatusValue(basket.status) > getStatusValue(req.body.status)) {
+            return res.status(OK).send('Basket status did not change (you cannot return to the previous status)');
         }
 
         await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
