@@ -12,12 +12,12 @@ export const StatusOrder: IStatusOrders = {
     'success': 5,
 }
 
-function isUndefined(status: any): status is StatusType {
-    return typeof status === "undefined";
+function isNotUndefined(status: any): status is StatusType {
+    return typeof status !== "undefined";
 }
 
 export function getStatusValue(status?: StatusType) {
-    return isUndefined(status) ? StatusOrder[status] : 999;
+    return isNotUndefined(status) ? StatusOrder[status] : 999;
 }
 
 export interface IBasket{

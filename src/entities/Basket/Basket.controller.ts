@@ -95,7 +95,7 @@ export const updateBasket = async (req: Request, res: Response) => {
         }
 
         if (getStatusValue(basket.status) > getStatusValue(req.body.status)) {
-            return res.status(OK).send('Basket status did not change (you cannot return to the previous status)');
+            return res.status(OK).send('Incorrect basket status (you cannot return to the previous status)');
         }
 
         await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
