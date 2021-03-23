@@ -6,8 +6,8 @@ interface IStatusOrders extends Record<StatusType, number>  { }
 export const StatusOrder: IStatusOrders = {
     'pending': 0,
     'rejected': 1, 'cancelled': 1, 
-    'accepted': 2, 
-    'offered': 3,
+    'offered': 2, 
+    'accepted': 3,
     'failedByRequestor': 4, 'failedByTarget': 4,
     'success': 5,
 }
