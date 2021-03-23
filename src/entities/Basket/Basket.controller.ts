@@ -5,7 +5,7 @@ import Basket from './Basket.schema';
 import User from '../User/User.schema';
 import Book from '../Book/Book.schema';
 import IBook from '../Book/Book.interface';
-import { getStatusValue } from '../Basket/Basket.interface'
+import { getStatusValue } from '../Basket/Basket.interface';
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -55,8 +55,8 @@ export const addBasket = async (req: Request, res: Response) => {
     }
 
     const basketData = req.body;
-    const createdByUserId = {createdByUserId: req.user}
-    const basket = new Basket({...basketData, ...createdByUserId})
+    const createdByUserId = {createdByUserId: req.user};
+    const basket = new Basket({...basketData, ...createdByUserId});
     try {
         await basket.save()
         return res.status(CREATED).json(basket);

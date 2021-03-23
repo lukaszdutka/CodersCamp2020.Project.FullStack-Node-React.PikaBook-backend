@@ -103,7 +103,7 @@ export const updateReadMessagesByInterlocutorsId = async (
         },
       },
       {
-        arrayFilters: [{ "updateMessage.read": false }],
+        arrayFilters: [{ "updateMessage.read": false, "updateMessage.recipient": sender._id }],
       }
     );
     return res.status(OK).send("Conversation status updated");
