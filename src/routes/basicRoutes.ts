@@ -17,11 +17,16 @@ if (process.env.NODE_ENV === 'production') {
     // Add cors
     const corsOptions: cors.CorsOptions = {
         allowedHeaders: [
-        'Origin',
-        'X-Requested-With',
-        'Content-Type',
-        'Accept',
-        'X-Access-Token',
+            'Origin',
+            'X-Requested-With',
+            'Content-Type',
+            'Accept',
+            'X-Access-Token',
+            'Authorization'
+        ],
+        exposedHeaders: [
+            'Content-Type',
+            'Authorization',
         ],
         credentials: true,
         methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
