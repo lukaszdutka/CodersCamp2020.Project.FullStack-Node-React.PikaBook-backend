@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import checkToken from  'express-jwt';
-import { getBasketById, addBasket, updateBasket } from '../entities/Basket/Basket.controller';
+import { getBasketById, addBasket, updateBasketStatus, updateBasketRead } from '../entities/Basket/Basket.controller';
 
 const router = Router();
 
@@ -8,8 +8,7 @@ const router = Router();
 router
     .get('/:id', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), getBasketById)
     .post('', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), addBasket)
-    .put('/:id', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), updateBasket)
-    // .delete('/:id', deleteBasket)
-
+    .put('/status/:id', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), updateBasketStatus)
+    .put('/read', checkToken({ secret: `${process.env.JWT_PRIVATE_KEY}`, algorithms: ['HS256']}), updateBasketRead)
 
 export default router;
