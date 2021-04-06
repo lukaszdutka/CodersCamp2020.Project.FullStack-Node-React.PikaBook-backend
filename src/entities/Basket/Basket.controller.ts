@@ -5,7 +5,7 @@ import Basket from "./Basket.schema";
 import User from "../User/User.schema";
 import Book from "../Book/Book.schema";
 import IBook from "../Book/Book.interface";
-import { getStatusValue } from "./Basket.interface";
+import { getStatusValue, StatusType } from "./Basket.interface";
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -102,14 +102,34 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
             if (!basket.createdByUserId.equals(user._id) && !basket.targetUserID.equals(user._id)) {
                 return res.status(FORBIDDEN).send("Basket does not belong to the user");
             }
-        } 
-
-        if (basket.status === req.body.status) {
-            return res.status(OK).send('Basket status did not change (new status is same as current status)');
+            if ((basket.createdByUserId.equals(user._id)) && 
+            (req.body.status == 'reject' || 
+            req.body.status == 'accepted' ||
+            req.body.status == 'successByTarget')) {
+              return res.status(OK).send('Basket status did not changed (status not allowed for basket creator)');
+            }
+            if ((basket.targetUserID.equals(user._id)) && 
+            (req.body.status == 'cancelled' ||
+            req.body.status == 'successByRequestor'
+            )) {
+              return res.status(OK).send('Basket status did not changed (status not allowed for basket target user)');
+            }
         }
 
-        if (getStatusValue(basket.status) > getStatusValue(req.body.status)) {
+        if (isFailureStatus(basket.status)) {
+          return res.status(OK).send('Basket status did not changed (basket is already in failure status)');
+        }
+
+        if (basket.status === req.body.status) {
+            return res.status(OK).send('Basket status did not change (new status is the same as a current status)');
+        }
+
+        if ( isPreviousStatus(req.body.status, basket.status) && !isFailureStatus(req.body.status)) {
             return res.status(OK).send('Incorrect basket status (you cannot return to the previous status)');
+        }
+
+        if ( !isSubsequentStatus(req.body.status, basket.status) && !isFailureStatus(req.body.status)) {
+          return res.status(OK).send('Incorrect basket status (new status is not subsequent to the previous one)');
         }
 
         await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
@@ -118,6 +138,20 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
         return res.status(BAD_REQUEST).send(error.message);
     }
 };
+
+const isFailureStatus = (status: StatusType | undefined) => {
+  return getStatusValue(status) == -1
+}
+
+const isPreviousStatus = (newStatus: StatusType | undefined, oldStatus: StatusType | undefined) => {
+  return getStatusValue(oldStatus) > getStatusValue(newStatus) 
+}
+
+const isSubsequentStatus = (newStatus: StatusType | undefined, oldStatus: StatusType | undefined) => {
+  return getStatusValue(newStatus) - getStatusValue(oldStatus) == 1
+}
+
+
 
 export const updateBasketRead = async (req: Request, res: Response) => {
   const user = await User.findById(req.user);
@@ -132,3 +166,4 @@ export const updateBasketRead = async (req: Request, res: Response) => {
     return res.status(BAD_REQUEST).send(error.message);
   }
 };
+

@@ -18,9 +18,10 @@ export const validateBasketStatus = (status: string): ValidationResult => {
         "accepted",
         "rejected",
         "cancelled",
-        "offered",
         "failedByRequestor",
         "failedByTarget",
+        "successByRequestor",
+        "successByTarget",
         "success"
       )
       .required(),

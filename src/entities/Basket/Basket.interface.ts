@@ -1,15 +1,14 @@
 import * as mongoose from "mongoose";
 
-type StatusType = 'pending'| 'accepted'|'rejected'|'cancelled'|'offered'|'failedByRequestor'|'failedByTarget'|'success';
+export type StatusType = 'pending'| 'accepted'|'rejected'|'cancelled'|'failedByRequestor'|'failedByTarget'|'successByRequestor'|'success'|'successByTarget';
 
 interface IStatusOrders extends Record<StatusType, number>  { }
 export const StatusOrder: IStatusOrders = {
-    'pending': 0,
-    'rejected': 1, 'cancelled': 1, 
-    'offered': 2, 
-    'accepted': 3,
-    'failedByRequestor': 4, 'failedByTarget': 4,
-    'success': 5,
+    'rejected': -1, 'cancelled': -1, 'failedByRequestor': -1, 'failedByTarget': -1,
+    'pending': 0, 
+    'accepted': 1,
+    'successByRequestor': 2, 'successByTarget': 2,
+    'success': 3,
 }
 
 function isNotUndefined(status: any): status is StatusType {
