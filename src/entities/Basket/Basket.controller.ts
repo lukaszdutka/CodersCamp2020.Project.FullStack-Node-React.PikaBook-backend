@@ -98,23 +98,6 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
             return res.status(NOT_FOUND).send('There is no basket to be updated')
         }
 
-        if( basket.createdByUserId ) {
-            if (!basket.createdByUserId.equals(user._id) && !basket.targetUserID.equals(user._id)) {
-                return res.status(FORBIDDEN).send("Basket does not belong to the user");
-            }
-            if ((basket.createdByUserId.equals(user._id)) && 
-            (req.body.status == 'rejected' || 
-            req.body.status == 'accepted' ||
-            req.body.status == 'successByTarget')) {
-              return res.status(OK).send('Basket status did not changed (status not allowed for basket creator)');
-            }
-            if ((basket.targetUserID.equals(user._id)) && 
-            (req.body.status == 'cancelled' ||
-            req.body.status == 'successByRequestor'
-            )) {
-              return res.status(OK).send('Basket status did not changed (status not allowed for basket target user)');
-            }
-        }
 
         if (isFailureStatus(basket.status)) {
           return res.status(OK).send('Basket status did not changed (basket is already in failure status)');
@@ -131,6 +114,27 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
         if ( !isSubsequentStatus(req.body.status, basket.status) && !isFailureStatus(req.body.status)) {
           return res.status(OK).send('Incorrect basket status (new status is not subsequent to the previous one)');
         }
+
+        if( basket.createdByUserId ) {
+          if (!basket.createdByUserId.equals(user._id) && !basket.targetUserID.equals(user._id)) {
+              return res.status(FORBIDDEN).send("Basket does not belong to the user");
+          }
+          if ((basket.createdByUserId.equals(user._id) && 
+          (req.body.status == 'rejected' || 
+          req.body.status == 'accepted' ||
+          req.body.status == 'successByTarget') ||
+          (req.body.status == 'success' && basket.status  == 'successByRequestor')
+          )) {
+            return res.status(OK).send('Basket status did not changed (status not allowed for basket creator)');
+          }
+          if ((basket.targetUserID.equals(user._id)) && 
+          (req.body.status == 'cancelled' ||
+          req.body.status == 'successByRequestor' ||
+          (req.body.status == 'success' && basket.status == 'successByTarget')
+          )) {
+            return res.status(OK).send('Basket status did not changed (status not allowed for basket target user)');
+          }
+      }
 
         await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
         return res.status(OK).send("Basket status updated");
