@@ -103,7 +103,7 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
                 return res.status(FORBIDDEN).send("Basket does not belong to the user");
             }
             if ((basket.createdByUserId.equals(user._id)) && 
-            (req.body.status == 'reject' || 
+            (req.body.status == 'rejected' || 
             req.body.status == 'accepted' ||
             req.body.status == 'successByTarget')) {
               return res.status(OK).send('Basket status did not changed (status not allowed for basket creator)');
