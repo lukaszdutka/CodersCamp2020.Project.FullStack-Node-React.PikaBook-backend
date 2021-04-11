@@ -30,7 +30,7 @@ export const getBooks = async (req: Request, res: Response) => {
         ownerId: any,
         author: RegExp,
         year: number,
-        genres: string[],
+        genres: any,
     }
     
     let queryObject: QueryObject = {
@@ -38,7 +38,7 @@ export const getBooks = async (req: Request, res: Response) => {
             name: new RegExp(reqName, "i"),
             author: new RegExp(reqAuthor, "i"),
             year: reqYear as unknown as number,
-            genres: reqGenresList,
+            genres: { $in: reqGenresList },
     };
 
     // remove unnecessary fileds from query
