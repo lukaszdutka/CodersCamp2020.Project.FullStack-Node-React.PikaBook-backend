@@ -31,16 +31,22 @@ export const getBasketById = async (req: Request, res: Response) => {
 };
 
 const validateBooksOwner = (books: IBook[], booksFromReqBody: string[]) => {
-  const booksToOfferId: string[] = books.map((book) => book._id.toString());
-  const booksToOfferFromReqBody = booksFromReqBody.map((id) => id.toString());
+  const booksId: string[] = books.map((book) => book._id.toString());
+  const booksFromReqBodyId = booksFromReqBody.map((id) => id.toString());
   if (
-    !booksToOfferFromReqBody.every(
-      (bookId) => booksToOfferId.indexOf(bookId) > -1
+    !booksFromReqBodyId.every(
+      (bookId) => booksId.indexOf(bookId) > -1
     )
   ) {
     return false;
   }
   return true;
+};
+
+const validateBooksAvailable = (books: IBook[], booksFromReqBody: string[]) => {
+    const booksForExchange = books.filter((book) => booksFromReqBody.indexOf(book._id.toString()) > -1);
+    const booksExchange: boolean[] = booksForExchange.map((book) => book.exchanged);
+    return !booksExchange.includes(true);
 };
 
 export const addBasket = async (req: Request, res: Response) => {
@@ -61,12 +67,24 @@ export const addBasket = async (req: Request, res: Response) => {
       .send("You are offering a book that you don't have.");
   }
 
+  if (!validateBooksAvailable(booksToOffer, booksToOfferFromReqBody)) {
+    return res
+    .status(BAD_REQUEST)
+    .send("You are offering a book that has been already exchanged.");
+  }
+
   const booksToRequest = await Book.find({ ownerId: req.body.targetUserID });
   const booksToRequestFromReqBody: string[] = req.body.booksRequested;
   if (!validateBooksOwner(booksToRequest, booksToRequestFromReqBody)) {
     return res
       .status(BAD_REQUEST)
       .send("You are requesting a book that target user doesn't have.");
+  }
+
+  if (!validateBooksAvailable(booksToRequest, booksToRequestFromReqBody)) {
+    return res
+    .status(BAD_REQUEST)
+    .send("You are requesting a book that has been already exchanged.");
   }
 
   const basketData = req.body;
