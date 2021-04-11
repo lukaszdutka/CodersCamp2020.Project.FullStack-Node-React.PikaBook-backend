@@ -62,10 +62,19 @@ To use most of API functionalities, you need to make an account and authorize yo
 
 ## Books
 
-Get the full list of all books, filter by `location`, `name` of the book
+Get the full list of all books. Possible parameters:
+
+| Parameter | Type | Description |
+|---|---|---|
+|location|string|Filter books by owner's location|
+|name|string|Filter book by title|
+|author|string|Filter book by author|
+|year|number|Filter book by year published|
+|genres|list of strings separated by comma|Filter by genre|
 
     GET /api/books
-    GET /api/books?name=book&location=city
+    GET /api/books?name=book&location=city?genres=action,fantasy
+
 
 Get a book by id
 

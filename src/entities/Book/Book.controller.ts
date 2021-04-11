@@ -13,7 +13,7 @@ export const getBooks = async (req: Request, res: Response) => {
     const reqName = req.query.name as string || ""
     const reqAuthor = req.query.author as string || ""
     const reqYear = req.query.year as string || ""
-    const reqGenres = req.query.genre as string || ""
+    const reqGenres = req.query.genres as string || ""
     let reqGenresList: string[] = []
 
     if (reqGenres) {
