@@ -9,30 +9,47 @@ const { BAD_REQUEST, CREATED, OK, NOT_FOUND } = StatusCodes;
 
 
 export const getBooks = async (req: Request, res: Response) => {
-    let { name, location } = req.query;
-    let books = {}
-    if (location && name){
-        const users = await User
-        .find({ location: new RegExp(location.toString(), "i")}, '_id');
-        const userIds = users.map((val) => val._id.toString());
-        books = await Book.find({ownerId: { $in: userIds}, name: new RegExp(name.toString(), "i")})
-                        .populate('ownerId', ['location', 'name'])
+    const reqLocation = req.query.location as string || ""
+    const reqName = req.query.name as string || ""
+    const reqAuthor = req.query.author as string || ""
+    const reqYear = req.query.year as string || ""
+    const reqGenres = req.query.genre as string || ""
+    let reqGenresList: string[] = []
+
+    if (reqGenres) {
+        reqGenresList = reqGenres.split(",");
     }
-    else if (name) {
-        books = await Book
-        .find({name: new RegExp(name.toString(), "i")})
-        .populate('ownerId', ['location', 'name']);
+
+    let userIds = []
+    if (reqLocation) {
+        const users = await User.find({ location: new RegExp(reqLocation, "i")}, '_id');
+        userIds = users.map((val) => val._id.toString());
     }
-    else if (location) {
-        const users = await User
-        .find({ location: new RegExp(location.toString(), "i")}, '_id');
-        const userIds = users.map((val) => val._id.toString());
-        books = await Book.find({ownerId: { $in: userIds}})
-                        .populate('ownerId', ['location', 'name'])
-    } else {
-        books = await Book.find({})
-            .populate('ownerId', ['location', 'name'])
+    interface QueryObject {
+        name: RegExp,
+        ownerId: any,
+        author: RegExp,
+        year: number,
+        genres: string[],
     }
+    
+    let queryObject: QueryObject = {
+            ownerId: { $in: userIds },
+            name: new RegExp(reqName, "i"),
+            author: new RegExp(reqAuthor, "i"),
+            year: reqYear as unknown as number,
+            genres: reqGenresList,
+    };
+
+    // remove unnecessary fileds from query
+    if (!reqName) delete queryObject["name" as keyof QueryObject]
+    if (!reqAuthor) delete queryObject["author" as keyof QueryObject]
+    if (!reqLocation) delete queryObject["ownerId" as keyof QueryObject]
+    if (!reqYear) delete queryObject["year" as keyof QueryObject]
+    if (!reqGenres) delete queryObject["genres" as keyof QueryObject]
+
+    const books = await Book.find(queryObject).populate('ownerId', ['location', 'name'])
+
     return res.status(OK).json(books)
 }
 
