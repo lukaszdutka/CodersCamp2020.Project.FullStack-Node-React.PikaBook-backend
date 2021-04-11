@@ -8,7 +8,8 @@ interface IBook {
   year?: number,
   publisher?: string,
   description? : string,
-  ownerId?: mongoose.Types.ObjectId
+  ownerId?: mongoose.Types.ObjectId,
+  exchanged: boolean
 }
 
 export default IBook;

@@ -6,6 +6,7 @@ import User from "../User/User.schema";
 import Book from "../Book/Book.schema";
 import IBook from "../Book/Book.interface";
 import { getStatusValue, StatusType } from "./Basket.interface";
+import { markBookExchanged } from "@entities/Book/Book.controller";
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -135,9 +136,20 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
             return res.status(OK).send('Basket status did not changed (status not allowed for basket target user)');
           }
       }
-
-        await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
-        return res.status(OK).send("Basket status updated");
+      if (req.body.status == "success") {
+        basket.booksOffered.forEach( async (book) => {
+          const id = book as unknown as string;
+          const changed = await markBookExchanged(id);
+          if (!changed) return res.status(OK).send('Problem in changing the exchange status of books offered');
+        })
+        basket.booksRequested.forEach( async (book) => {
+          const id = book as unknown as string;
+          const changed = await markBookExchanged(id);
+          if (!changed) return res.status(OK).send('Problem in changing the exchange status of books requested');
+        })
+      }
+      await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
+      return res.status(OK).send("Basket status updated");
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
     }

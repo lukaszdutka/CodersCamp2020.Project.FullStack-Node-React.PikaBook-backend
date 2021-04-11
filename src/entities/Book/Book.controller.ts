@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import validateBookReq from './Book.validation';
 import Book from '../../entities/Book/Book.schema';
 import User from '../../entities/User/User.schema';
-import { NOTFOUND } from 'node:dns';
 
 const { BAD_REQUEST, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -76,6 +75,19 @@ export const updateBook = async (req: Request, res: Response) => {
         return res.status(OK).json(book);
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
+    }
+}
+
+export const markBookExchanged = async (bookId: string) => {
+    try {
+        const book = await Book
+            .findOneAndUpdate({ _id: bookId }, 
+                { $set: {'exchanged': true } }, 
+                { new: true })
+        if (!book) return false
+        return true
+    } catch (error) {
+        return false;
     }
 }
 
