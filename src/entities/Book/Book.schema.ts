@@ -26,6 +26,10 @@ const schema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  exchanged: {
+    type: Boolean,
+    default: false,
   }
 });
 

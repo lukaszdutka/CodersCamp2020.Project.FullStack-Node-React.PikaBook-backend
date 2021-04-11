@@ -43,7 +43,7 @@ const basketSchema = new mongoose.Schema({
   },
   timeCreated: {
     type: Date,
-    defśault: Date.now,
+    default: Date.now,
   },
   read: {
     type: Boolean,
