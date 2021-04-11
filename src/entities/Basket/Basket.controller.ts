@@ -5,6 +5,7 @@ import Basket from "./Basket.schema";
 import User from "../User/User.schema";
 import Book from "../Book/Book.schema";
 import IBook from "../Book/Book.interface";
+import { getStatusValue, StatusType } from "./Basket.interface";
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -79,44 +80,82 @@ export const addBasket = async (req: Request, res: Response) => {
 };
 
 export const updateBasketStatus = async (req: Request, res: Response) => {
-  const { error } = validateBasketStatus(req.body);
-  if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
+    
+    const { error } = validateBasketStatus(req.body);
+    if (error) return res.status(BAD_REQUEST).send(error.details[0].message);
 
-  const user = await User.findById(req.user);
-  if (!user) return res.status(BAD_REQUEST).send("The user is not logged in");
+    const user = await User.findById(req.user);
+    if (!user)
+    return res.status(BAD_REQUEST).send("The user is not logged in");
 
-  try {
-    const basket = await Basket.findById({ _id: req.params.id })
-      .populate("createdByUserId", "name")
-      .populate("targetUserID", "name");
+    try {
+        const basket = await Basket
+        .findById( { _id: req.params.id })
+        .populate('createdByUserId', 'name')
+        .populate('targetUserID', 'name')
+        
+        if (!basket) {
+            return res.status(NOT_FOUND).send('There is no basket to be updated')
+        }
 
-    if (!basket) {
-      return res.status(NOT_FOUND).send("There is no basket to be updated");
-    }
 
-    if (basket.createdByUserId) {
-      if (
-        !basket.createdByUserId.equals(user._id) &&
-        !basket.targetUserID.equals(user._id)
-      ) {
-        return res.status(FORBIDDEN).send("Basket does not belong to the user");
+        if (isFailureStatus(basket.status)) {
+          return res.status(OK).send('Basket status did not changed (basket is already in failure status)');
+        }
+
+        if (basket.status === req.body.status) {
+            return res.status(OK).send('Basket status did not change (new status is the same as a current status)');
+        }
+
+        if ( isPreviousStatus(req.body.status, basket.status) && !isFailureStatus(req.body.status)) {
+            return res.status(OK).send('Incorrect basket status (you cannot return to the previous status)');
+        }
+
+        if ( !isSubsequentStatus(req.body.status, basket.status) && !isFailureStatus(req.body.status)) {
+          return res.status(OK).send('Incorrect basket status (new status is not subsequent to the previous one)');
+        }
+
+        if( basket.createdByUserId ) {
+          if (!basket.createdByUserId.equals(user._id) && !basket.targetUserID.equals(user._id)) {
+              return res.status(FORBIDDEN).send("Basket does not belong to the user");
+          }
+          if ((basket.createdByUserId.equals(user._id) && 
+          (req.body.status == 'rejected' || 
+          req.body.status == 'accepted' ||
+          req.body.status == 'successByTarget') ||
+          (req.body.status == 'success' && basket.status  == 'successByRequestor')
+          )) {
+            return res.status(OK).send('Basket status did not changed (status not allowed for basket creator)');
+          }
+          if ((basket.targetUserID.equals(user._id)) && 
+          (req.body.status == 'cancelled' ||
+          req.body.status == 'successByRequestor' ||
+          (req.body.status == 'success' && basket.status == 'successByTarget')
+          )) {
+            return res.status(OK).send('Basket status did not changed (status not allowed for basket target user)');
+          }
       }
-    }
 
-    if (basket.status === req.body.status) {
-      return res
-        .status(OK)
-        .send(
-          "Basket status did not change (new status is same as current status)"
-        );
+        await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
+        return res.status(OK).send("Basket status updated");
+    } catch (error) {
+        return res.status(BAD_REQUEST).send(error.message);
     }
-
-    await Basket.updateOne({ _id: req.params.id }, { status: req.body.status });
-    return res.status(OK).send("Basket status updated");
-  } catch (error) {
-    return res.status(BAD_REQUEST).send(error.message);
-  }
 };
+
+const isFailureStatus = (status: StatusType | undefined) => {
+  return getStatusValue(status) == -1
+}
+
+const isPreviousStatus = (newStatus: StatusType | undefined, oldStatus: StatusType | undefined) => {
+  return getStatusValue(oldStatus) > getStatusValue(newStatus) 
+}
+
+const isSubsequentStatus = (newStatus: StatusType | undefined, oldStatus: StatusType | undefined) => {
+  return getStatusValue(newStatus) - getStatusValue(oldStatus) == 1
+}
+
+
 
 export const updateBasketRead = async (req: Request, res: Response) => {
   const user = await User.findById(req.user);
@@ -131,3 +170,4 @@ export const updateBasketRead = async (req: Request, res: Response) => {
     return res.status(BAD_REQUEST).send(error.message);
   }
 };
+
