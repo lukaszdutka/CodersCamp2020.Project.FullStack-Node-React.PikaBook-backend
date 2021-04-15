@@ -192,8 +192,8 @@ export const updateBasketRead = async (req: Request, res: Response) => {
   const user = await User.findById(req.user);
   if (!user) return res.status(BAD_REQUEST).send("The user is not logged in");
   try {
-    await Basket.updateMany(
-      { targetUserID: user._id },
+    await Basket.updateOne(
+      { _id: req.params.id },
       { $set: { read: true } }
     );
     return res.status(OK).send("Basket status updated");
