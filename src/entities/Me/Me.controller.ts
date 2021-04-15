@@ -65,9 +65,17 @@ export const getLoggedUserBaskets = async (
   if ( status ) {
     const baskets = await Basket.find({$or: [{ createdByUserId: sender._id as string}, { targetUserID: sender._id as string }]})
                                 .where('status').equals(status)
+                                .populate("createdByUserId", "name")
+                                .populate("targetUserID", "name")
+                                .populate("booksOffered", "name")
+                                .populate("booksRequested", "name")
     return res.status(OK).json(baskets);
   }
-  const baskets = await Basket.find({$or: [{ createdByUserId: sender._id as string}, { targetUserID: sender._id as string }]});
+  const baskets = await Basket.find({$or: [{ createdByUserId: sender._id as string}, { targetUserID: sender._id as string }]})
+                              .populate("createdByUserId", "name")
+                              .populate("targetUserID", "name")
+                              .populate("booksOffered", "name")
+                              .populate("booksRequested", "name")
   return res.status(OK).json(baskets);
 };
 export const getAllPokes = async (req: Request, res: Response) => {
