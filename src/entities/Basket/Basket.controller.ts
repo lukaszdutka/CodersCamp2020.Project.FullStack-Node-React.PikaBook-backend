@@ -6,7 +6,6 @@ import User from "../User/User.schema";
 import Book from "../Book/Book.schema";
 import IBook from "../Book/Book.interface";
 import { getStatusValue, StatusType } from "./Basket.interface";
-import { markBookExchanged } from "@entities/Book/Book.controller";
 
 const { BAD_REQUEST, FORBIDDEN, CREATED, OK, NOT_FOUND } = StatusCodes;
 
@@ -31,22 +30,16 @@ export const getBasketById = async (req: Request, res: Response) => {
 };
 
 const validateBooksOwner = (books: IBook[], booksFromReqBody: string[]) => {
-  const booksId: string[] = books.map((book) => book._id.toString());
-  const booksFromReqBodyId = booksFromReqBody.map((id) => id.toString());
+  const booksToOfferId: string[] = books.map((book) => book._id.toString());
+  const booksToOfferFromReqBody = booksFromReqBody.map((id) => id.toString());
   if (
-    !booksFromReqBodyId.every(
-      (bookId) => booksId.indexOf(bookId) > -1
+    !booksToOfferFromReqBody.every(
+      (bookId) => booksToOfferId.indexOf(bookId) > -1
     )
   ) {
     return false;
   }
   return true;
-};
-
-const validateBooksAvailable = (books: IBook[], booksFromReqBody: string[]) => {
-    const booksForExchange = books.filter((book) => booksFromReqBody.indexOf(book._id.toString()) > -1);
-    const booksExchange: boolean[] = booksForExchange.map((book) => book.exchanged);
-    return !booksExchange.includes(true);
 };
 
 export const addBasket = async (req: Request, res: Response) => {
@@ -67,24 +60,12 @@ export const addBasket = async (req: Request, res: Response) => {
       .send("You are offering a book that you don't have.");
   }
 
-  if (!validateBooksAvailable(booksToOffer, booksToOfferFromReqBody)) {
-    return res
-    .status(BAD_REQUEST)
-    .send("You are offering a book that has been already exchanged.");
-  }
-
   const booksToRequest = await Book.find({ ownerId: req.body.targetUserID });
   const booksToRequestFromReqBody: string[] = req.body.booksRequested;
   if (!validateBooksOwner(booksToRequest, booksToRequestFromReqBody)) {
     return res
       .status(BAD_REQUEST)
       .send("You are requesting a book that target user doesn't have.");
-  }
-
-  if (!validateBooksAvailable(booksToRequest, booksToRequestFromReqBody)) {
-    return res
-    .status(BAD_REQUEST)
-    .send("You are requesting a book that has been already exchanged.");
   }
 
   const basketData = req.body;
@@ -154,20 +135,9 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
             return res.status(OK).send('Basket status did not changed (status not allowed for basket target user)');
           }
       }
-      if (req.body.status == "success") {
-        basket.booksOffered.forEach( async (book) => {
-          const id = book as unknown as string;
-          const changed = await markBookExchanged(id);
-          if (!changed) return res.status(OK).send('Problem in changing the exchange status of books offered');
-        })
-        basket.booksRequested.forEach( async (book) => {
-          const id = book as unknown as string;
-          const changed = await markBookExchanged(id);
-          if (!changed) return res.status(OK).send('Problem in changing the exchange status of books requested');
-        })
-      }
-      await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
-      return res.status(OK).send("Basket status updated");
+        await Basket.updateOne( { _id: req.params.id }, { status: req.body.status});
+        await Basket.updateOne( { _id: req.params.id }, { read: false});
+        return res.status(OK).send("Basket status updated");
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
     }
