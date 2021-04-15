@@ -16,8 +16,8 @@ export const getBasketById = async (req: Request, res: Response) => {
     const basket = await Basket.findById(req.params.id)
       .populate("createdByUserId", "name")
       .populate("targetUserID", "name")
-      .populate("booksOffered", "name")
-      .populate("booksRequested", "name");
+      .populate("booksOffered")
+      .populate("booksRequested");
     if (
       !basket?.createdByUserId?.equals(user?._id) &&
       !basket?.targetUserID.equals(user?._id)
@@ -167,6 +167,7 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
         })
       }
       await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
+      await Basket.updateOne( { _id: req.params.id }, { read: false});
       return res.status(OK).send("Basket status updated");
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
