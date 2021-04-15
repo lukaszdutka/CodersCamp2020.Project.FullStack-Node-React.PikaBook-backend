@@ -193,7 +193,7 @@ export const updateBasketRead = async (req: Request, res: Response) => {
   if (!user) return res.status(BAD_REQUEST).send("The user is not logged in");
   try {
     await Basket.updateOne(
-      { _id: req.params._id },
+      { _id: req.params.id },
       { $set: { read: true } }
     );
     return res.status(OK).send("Basket status updated");
