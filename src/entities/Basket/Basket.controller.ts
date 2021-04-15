@@ -167,6 +167,7 @@ export const updateBasketStatus = async (req: Request, res: Response) => {
         })
       }
       await Basket.updateOne( { _id: req.params.id }, { status: req.body.status });
+      await Basket.updateOne( { _id: req.params.id }, { read: false});
       return res.status(OK).send("Basket status updated");
     } catch (error) {
         return res.status(BAD_REQUEST).send(error.message);
